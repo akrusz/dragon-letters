@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<link rel="stylesheet" type="text/css" href="letters.css">
+</head>
+<body>
+<div class="game-board"></div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>
+
+var config = {
+  totalRows : 6,
+  totalCols : 7,
+  rowHeight : 50,
+  colWidth : 50,
+  orbRadius : 23
+};
+
+var drag = d3.behavior.drag()
+    .on("drag", dragmove)
+    .on('dragend', dragend);
+
+var board = d3.select("div.game-board");
+
+var orbDivs = board.selectAll('div')
+    .data(d3.range(config.totalCols * config.totalRows).map(randomOrb));
+
+var orbEnter = orbDivs.enter().append("div");
+orbEnter.style('left', function(d, i){
+  return orbNumberCoords(i, config)[0] + 'px';
+});
+orbEnter.style('top', function(d, i){
+  return orbNumberCoords(i, config)[1] + 'px';
+});
+orbEnter.on('mouseup', orbMouseUp);
+
+orbEnter.attr("class", function(d, i) {
+  switch(d.color){
+    case 'R':
+      return 'red orb';
+    case 'G':
+      return 'green orb';
+    case 'B':
+      return 'blue orb';
+    case 'L':
+      return 'light orb';
+    case 'D':
+      return 'dark orb';
+  }
+});
+orbEnter.html(function(d){
+  return '<div class="letter">' + d.letter + '</div>';
+})
+orbEnter.call(drag);
+
+function dragmove(d, i) {
+  var $this = $(this);
+  $this.addClass('moving')
+  var x = d3.event.x;
+  var y = d3.event.y;
+  var left = x - $this.width()/2;
+  var top = y - $this.height()/2;
+  left = limitToBounds(left, 0, config.colWidth * config.totalCols);
+  top = limitToBounds(top, 0, config.rowHeight * config.totalRows);
+
+  d3.select(this)
+      .style("left", left + 'px')
+      .style("top", top + 'px');
+
+  var newPosition = coordsOrbNumber([x,y], config);
+  // don't do this if mouse not down
+  if(newPosition != d.position){
+    // select the displaced orb element (actually just one)
+    var displacedOrbs = orbEnter.filter(function(d,i){
+      return d.position == newPosition;
+    });
+    
+    var displacedOrb = d3.select(displacedOrbs[0]);
+    var displacedOrbData = displacedOrb.data();
+    displacedOrbData.position = d.position;   
+    displacedOrb.data([displacedOrbData]);
+
+    move(displacedOrbs[0], orbNumberCoords(d.position));
+
+    d.position = newPosition;
+  }
+};
+
+function dragend(d, i){
+
+  var x = parseInt($(this).css('left'));
+  var y = parseInt($(this).css('top'));
+  var nearestRowY = Math.round(y / config.rowHeight) * config.rowHeight;
+  var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
+
+  move(this, [x, y]);
+}
+
+function move(element, coords){
+  $(element).css('top', coords[1] + 'px')
+    .css('left', coords[0] + 'px');
+}
+
+function orbMouseUp(){
+  // check for matches
+}
+
+function randomOrb(position){
+  var orb = {};
+
+  orb.letter = randomAtoZ();
+  orb.position = position;
+  orb.color = 'RGBLD'[Math.floor(5 * Math.random())];
+  return orb;
+}
+
+function randomAtoZ(){
+  var lookup = {
+  // Ranges calculated from data found at
+  // http://en.wikipedia.org/wiki/Letter_frequency
+  a: 8167,  b: 9659,  c: 12441, d: 16694,
+  e: 29396, f: 31624, g: 33639, h: 39733,
+  i: 46699, j: 46852, k: 47624, l: 51649,
+  m: 54055, n: 60804, o: 68311, p: 70240,
+  q: 70335, r: 76322, s: 82649, t: 91705,
+  u: 94463, v: 95441, w: 97801, x: 97951,
+  y: 99925, z: 100000};
+  var random = Math.random() * 100000,
+      letter;
+  for (letter in lookup) {
+    if (random < lookup[letter]) {
+      return letter;
+    }
+  }
+}
+  
+function orbNumberCoords(number){
+  var x, y, row, col;
+  row = Math.floor(number / config.totalCols);
+  col = Math.floor(number % config.totalCols);
+  x = col * config.colWidth;
+  y = row * config.rowHeight;
+
+  return [x, y];
+}
+
+function coordsOrbNumber(coords){
+  var x = coords[0];
+  var y = coords[1];
+  var row = Math.min(config.totalRows, Math.max(0, Math.floor(y / config.rowHeight)));
+  var col = Math.min(config.totalCols, Math.max(0, Math.floor(x / config.colWidth)));
+
+  return row * config.totalCols + col;
+}
+
+function limitToBounds(value, min, max){
+  return value < min
+    ? min
+    : value > max 
+      ? max
+      : value;
+}
+
+</script>

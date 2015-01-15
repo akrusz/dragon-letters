@@ -1,0 +1,50 @@
+svg {
+  width: 800px;
+  height: 800px;
+}
+
+div.game-board {
+  position: relative;
+  width: 400px;
+  height: 350px;
+}
+
+div.orb {
+  position: absolute;
+  width: 49px;
+  height: 49px;
+  border: 1px solid black;
+  background: white;
+  cursor: pointer;
+}
+
+div.moving {
+  z-index: 5;
+}
+
+div.letter {
+  font-family: sans-serif;
+  font-size: 36px;
+  text-align: center;
+  margin: 7px 0;
+}
+
+div.red {
+  color: #DD2222;
+}
+
+div.green {
+  color: #22DD22;
+}
+
+div.blue {
+  color: #2222DD;
+}
+
+div.light {
+  color: #DDDD22;
+}
+
+div.dark {
+  color: #994499;
+}
