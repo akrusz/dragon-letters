@@ -13,8 +13,7 @@ var config = {
   totalRows : 6,
   totalCols : 7,
   rowHeight : 50,
-  colWidth : 50,
-  orbRadius : 23
+  colWidth : 50
 };
 
 var drag = d3.behavior.drag()
@@ -75,10 +74,10 @@ function dragmove(d, i) {
     var displacedOrbs = orbEnter.filter(function(d,i){
       return d.position == newPosition;
     });
-    
+
     var displacedOrb = d3.select(displacedOrbs[0]);
     var displacedOrbData = displacedOrb.data();
-    displacedOrbData.position = d.position;   
+    displacedOrbData.position = d.position;
     displacedOrb.data([displacedOrbData]);
 
     move(displacedOrbs[0], orbNumberCoords(d.position));
@@ -134,7 +133,7 @@ function randomAtoZ(){
     }
   }
 }
-  
+
 function orbNumberCoords(number){
   var x, y, row, col;
   row = Math.floor(number / config.totalCols);
@@ -157,7 +156,7 @@ function coordsOrbNumber(coords){
 function limitToBounds(value, min, max){
   return value < min
     ? min
-    : value > max 
+    : value > max
       ? max
       : value;
 }
