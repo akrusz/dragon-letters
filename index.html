@@ -55,24 +55,27 @@ orbEnter.call(drag);
 
 function dragmove(d, i) {
   var $this = $(this);
-  $this.addClass('moving')
+  $this.addClass('moving');
+  
   var x = d3.event.x;
   var y = d3.event.y;
+
+  // drag from center of orb
   var left = x - $this.width()/2;
   var top = y - $this.height()/2;
   left = limitToBounds(left, 0, config.colWidth * config.totalCols);
   top = limitToBounds(top, 0, config.rowHeight * config.totalRows);
 
-  d3.select(this)
-      .style("left", left + 'px')
+  var d3this = d3.select(this);
+  d3this.style("left", left + 'px')
       .style("top", top + 'px');
 
   var newPosition = coordsOrbNumber([x,y], config);
-  // don't do this if mouse not down
-  if(newPosition != d.position){
+
+  if(newPosition !== d.position){
     // select the displaced orb element (actually just one)
     var displacedOrbs = orbEnter.filter(function(d,i){
-      return d.position == newPosition;
+      return d.position === newPosition;
     });
 
     var displacedOrb = d3.select(displacedOrbs[0]);
@@ -82,14 +85,18 @@ function dragmove(d, i) {
 
     move(displacedOrbs[0], orbNumberCoords(d.position));
 
-    d.position = newPosition;
+    var thisOrbData = d3this.data();
+    thisOrbData[0].position = newPosition;
+    d3this.data(thisOrbData);
   }
 };
 
 function dragend(d, i){
+  var $this = $(this);
+  $this.removeClass('moving');
 
-  var x = parseInt($(this).css('left'));
-  var y = parseInt($(this).css('top'));
+  var x = parseInt($this.css('left'));
+  var y = parseInt($this.css('top'));
   var nearestRowY = Math.round(y / config.rowHeight) * config.rowHeight;
   var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
 
@@ -147,8 +154,8 @@ function orbNumberCoords(number){
 function coordsOrbNumber(coords){
   var x = coords[0];
   var y = coords[1];
-  var row = Math.min(config.totalRows, Math.max(0, Math.floor(y / config.rowHeight)));
-  var col = Math.min(config.totalCols, Math.max(0, Math.floor(x / config.colWidth)));
+  var row = limitToBounds(Math.floor(y / config.rowHeight), 0, config.totalRows - 1);
+  var col = limitToBounds(Math.floor(x / config.colWidth), 0, config.totalCols - 1);
 
   return row * config.totalCols + col;
 }
