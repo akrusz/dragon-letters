@@ -99,7 +99,7 @@ function dragend(d, i){
   var nearestRowY = Math.round(y / config.rowHeight) * config.rowHeight;
   var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
 
-  move(this, [x, y]);
+  move(this, [nearestColX, nearestRowY]);
 }
 
 function move(element, coords){
