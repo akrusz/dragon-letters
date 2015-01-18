@@ -34,7 +34,6 @@ orbEnter.style('left', function(d, i){
 orbEnter.style('top', function(d, i){
   return orbNumberCoords(i, config)[1] + 'px';
 });
-orbEnter.on('mouseup', orbMouseUp);
 
 orbEnter.attr("class", function(d, i) {
   switch(d.color){
@@ -102,6 +101,9 @@ function dragend(d, i){
   var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
 
   move(this, [nearestColX, nearestRowY]);
+
+  // check for matches
+  findMatches();
 }
 
 function move(element, coords){
@@ -109,8 +111,15 @@ function move(element, coords){
     .css('left', coords[0] + 'px');
 }
 
-function orbMouseUp(){
-  // check for matches
+function findMatches(){
+  var orbLetters = orbEnter.data()
+    .sort(function(a, b){
+      return d3.ascending(a.position, b.position)
+    })
+    .map(function(d){
+      return d.letter;
+    });
+    
 }
 
 function randomOrb(position){
