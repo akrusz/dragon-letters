@@ -113,6 +113,9 @@
 				return d.color;
 			});
 
+		// convert to 2d array
+		orbColors = convertTo2d(orbColors, config.totalCols);
+		matchColors(orbColors);
 	}
 
 	function matchWords(letters){
@@ -120,7 +123,20 @@
 	}
 
 	function matchColors(colors){
+		// colors is a nested array of the orb colors
+		for(var i = 0; i < config.totalRows; i++){
+			for(var j = 0; j < config.totalCols; j++){
+				var x = 5;
+			}
+		}
+	}
 
+	function convertTo2d(array, size){
+		var newArray = [];
+		while(array.length){
+			newArray.push(array.splice(0, size));
+		}
+		return newArray;
 	}
 
 	function randomOrb(position){
