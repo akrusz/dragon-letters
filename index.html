@@ -78,10 +78,9 @@ function dragmove(d, i) {
       return d.position === newPosition;
     });
 
-    var displacedOrb = d3.select(displacedOrbs[0]);
-    var displacedOrbData = displacedOrb.data();
-    displacedOrbData.position = d.position;
-    displacedOrb.data([displacedOrbData]);
+    var displacedOrbData = displacedOrbs.data();
+    displacedOrbData[0].position = d.position;
+    displacedOrbs.data(displacedOrbData);
 
     move(displacedOrbs[0], orbNumberCoords(d.position));
 
