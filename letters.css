@@ -13,13 +13,15 @@ div.orb {
   position: absolute;
   width: 49px;
   height: 49px;
-  border: 1px solid black;
+  border: 1px solid #666;
+  border-radius: 10px;
   background: white;
   cursor: pointer;
 }
 
 div.moving {
   z-index: 5;
+  box-shadow: 3px 3px 8px #444;
 }
 
 div.letter {
@@ -30,21 +32,21 @@ div.letter {
 }
 
 div.red {
-  color: #DD2222;
+  background: #EE9999;
 }
 
 div.green {
-  color: #22DD22;
+  background: #99EE99;
 }
 
 div.blue {
-  color: #2222DD;
+  background: #A0A0EE;
 }
 
 div.light {
-  color: #DDDD22;
+  background: #EEEE99;
 }
 
 div.dark {
-  color: #994499;
+  background: #DD88EE;
 }
