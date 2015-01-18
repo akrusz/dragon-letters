@@ -112,14 +112,18 @@ function move(element, coords){
 }
 
 function findMatches(){
-  var orbLetters = orbEnter.data()
+  var orbs = orbEnter.data()
     .sort(function(a, b){
       return d3.ascending(a.position, b.position)
-    })
-    .map(function(d){
+    });
+  var orbLetters = orbs.map(function(d){
       return d.letter;
     });
-    
+  var orbColors = orbs.map(function(d){
+      return d.color;
+    });
+
+  var x = 5;
 }
 
 function randomOrb(position){
