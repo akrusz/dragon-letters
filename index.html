@@ -47,6 +47,8 @@ orbEnter.attr("class", function(d, i) {
       return 'light orb';
     case 'D':
       return 'dark orb';
+    case 'W':
+      return 'white orb';
   }
 });
 orbEnter.html(function(d){
@@ -131,7 +133,7 @@ function randomOrb(position){
 
   orb.letter = randomAtoZ();
   orb.position = position;
-  orb.color = 'RGBLD'[Math.floor(5 * Math.random())];
+  orb.color = 'RGBLDW'[Math.floor(6 * Math.random())];
   return orb;
 }
 

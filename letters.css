@@ -40,7 +40,7 @@ div.green {
 }
 
 div.blue {
-  background: #A0A0EE;
+  background: #A0B0EE;
 }
 
 div.light {
@@ -48,5 +48,9 @@ div.light {
 }
 
 div.dark {
-  background: #CC77DD;
+  background: #CC90DD;
+}
+
+div.white {
+  background: #EEEEEE;
 }
