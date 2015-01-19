@@ -42,7 +42,7 @@
 	});
 	orbEnter.html(function(d){
 		return '<div class="letter">' + d.letter + '</div>';
-	})
+	});
 	orbEnter.call(drag);
 
 	function dragmove(d, i) {
@@ -81,7 +81,7 @@
 			thisOrbData[0].position = newPosition;
 			d3this.data(thisOrbData);
 		}
-	};
+	}
 
 	function dragend(d, i){
 		var $this = $(this);
@@ -126,11 +126,29 @@
 
 	function matchColors(colors){
 		// colors is a nested array of the orb colors
-		for(var i = 0; i < config.totalRows - config.minMatchSize; i++){
-			for(var j = 0; j < config.totalCols - config.minMatchSize; j++){
-				// horizontal match
-				if(colors[i][j] === colors[i][j+1] && colors[i][j] === colors[i][j+2]){
+		var colorMatches = {R:[],G:[],B:[],L:[],D:[],W:[]};
 
+		for(var i = 0; i < config.totalRows; i++){
+			for(var j = 0; j < config.totalCols; j++){
+				var thisColor = colors[i][j];
+				// horizontal match, only if there's room
+				if(j < config.totalCols - config.minMatchSize + 1 
+					&& thisColor === colors[i][j+1] && thisColor === colors[i][j+2]){
+					colorMatches[thisColor].push([i,j], [i,j+1], [i,j+2]);
+
+					for(var k = j+3; thisColor === colors[i][k] && k < config.totalCols; k++){
+						colorMatches[thisColor].push([i,k]);
+					}
+				}
+
+				// vertical match, only if there's room
+				if(i < config.totalRows - config.minMatchSize + 1 
+					&& thisColor === colors[i+1][j] && thisColor === colors[i+2][j]){
+					colorMatches[thisColor].push([i,j], [i+1,j], [i+2,j]);
+
+					for(k = i+3; thisColor === colors[k][j] && k < config.totalRows; k++){
+						colorMatches[thisColor].push([k,j]);
+					}
 				}
 			}
 		}
@@ -155,7 +173,7 @@
 
 	function randomAtoZ(){
 		var lookup = {
-		// Ranges calculated from data found at
+		// Ranges modified from data found at
 		// http://www.oxforddictionaries.com/us/words/what-is-the-frequency-of-the-letters-of-the-alphabet-in-english
 		e: 57, a: 100, r: 139, i: 177, o: 214, t: 249, n: 283, l: 301, c: 323,
 		u: 342, d: 359, p: 375, m: 390, h: 405, g: 418, b: 429, f: 438,
