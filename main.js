@@ -8,105 +8,101 @@
 		colors: 'RGBLDW'
 	};
 
-	renderOrbs(d3.range(config.totalCols * config.totalRows).map(randomOrb));
+	var data = d3.range(config.totalCols * config.totalRows).map(randomOrb);
 
-	function renderOrbs(data){
+	var drag = d3.behavior.drag()
+			.on("drag", dragmove)
+			.on('dragend', dragend);
 
-		var drag = d3.behavior.drag()
-				.on("drag", dragmove)
-				.on('dragend', dragend);
+	var board = d3.select("div.game-board");
 
-		var board = d3.select("div.game-board");
+	var orbDivs = board.selectAll('div.orb')
+			.data(data);
 
-		var orbDivs = board.selectAll('div.orb')
-				.data(data);
+	var orbEnter = orbDivs.enter().append("div");
+	orbEnter.style('left', function(d, i){
+		return orbNumberCoords(i, config)[0] + 'px';
+	});
+	orbEnter.style('top', function(d, i){
+		return orbNumberCoords(i, config)[1] + 'px';
+	});
 
-		var orbEnter = orbDivs.enter().append("div");
-		orbEnter.style('left', function(d, i){
-			return orbNumberCoords(i, config)[0] + 'px';
-		});
-		orbEnter.style('top', function(d, i){
-			return orbNumberCoords(i, config)[1] + 'px';
-		});
-
-		orbEnter.attr("class", function(d, i) {
-			switch(d.color){
-				case 'R':
-					return 'red orb';
-				case 'G':
-					return 'green orb';
-				case 'B':
-					return 'blue orb';
-				case 'L':
-					return 'light orb';
-				case 'D':
-					return 'dark orb';
-				case 'W':
-					return 'white orb';
-			}
-		});
-		orbEnter.html(function(d){
-			return '<div class="letter">' + d.letter + '</div>';
-		});
-		orbEnter.call(drag);
-
-
-		function dragmove(d, i) {
-			var $this = $(this);
-			$this.addClass('moving');
-			
-			var x = d3.event.x;
-			var y = d3.event.y;
-
-			// drag from center of orb
-			var left = x - $this.width()/2;
-			var top = y - $this.height()/2;
-			left = limitToBounds(left, 0, config.colWidth * config.totalCols);
-			top = limitToBounds(top, 0, config.rowHeight * config.totalRows);
-
-			var newPosition = coordsOrbNumber([x,y], config);
-
-			var d3this = d3.select(this);
-			d3this.style('left', left + 'px')
-					.style('top', top + 'px');
-
-			if(newPosition !== d.position){
-
-				// select the displaced orb element (actually just one)
-				var displacedOrbs = orbEnter.filter(function(d,i){
-					return d.position === newPosition;
-				});
-
-				var displacedOrbData = displacedOrbs.data();
-				displacedOrbData[0].position = d.position;
-				displacedOrbs.data(displacedOrbData);
-
-				move(displacedOrbs[0], orbNumberCoords(d.position));
-
-				var thisOrbData = d3this.data();
-				thisOrbData[0].position = newPosition;
-				d3this.data(thisOrbData);
-			}
+	orbEnter.attr("class", function(d, i) {
+		switch(d.color){
+			case 'R':
+				return 'red orb';
+			case 'G':
+				return 'green orb';
+			case 'B':
+				return 'blue orb';
+			case 'L':
+				return 'light orb';
+			case 'D':
+				return 'dark orb';
+			case 'W':
+				return 'white orb';
 		}
+	});
+	orbEnter.html(function(d){
+		return '<div class="letter">' + d.letter + '</div>';
+	});
+	orbEnter.call(drag);
 
-		function dragend(d, i){
-			var $this = $(this);
-			$this.removeClass('moving');
 
-			var x = parseInt($this.css('left'));
-			var y = parseInt($this.css('top'));
-			var nearestRowY = Math.round(y / config.rowHeight) * config.rowHeight;
-			var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
+	function dragmove(d, i) {
+		var $this = $(this);
+		$this.addClass('moving');
+		
+		var x = d3.event.x;
+		var y = d3.event.y;
 
-			move(this, [nearestColX, nearestRowY]);
+		// drag from center of orb
+		var left = x - $this.width()/2;
+		var top = y - $this.height()/2;
+		left = limitToBounds(left, 0, config.colWidth * config.totalCols);
+		top = limitToBounds(top, 0, config.rowHeight * config.totalRows);
 
-			// check for matches
-			var matches = findMatches(orbEnter.data());
+		var newPosition = coordsOrbNumber([x,y], config);
 
-			clearMatches(matches, orbEnter.data());
+		var d3this = d3.select(this);
+		d3this.style('left', left + 'px')
+				.style('top', top + 'px');
+
+		if(newPosition !== d.position){
+
+			// select the displaced orb element (actually just one)
+			var displacedOrbs = orbEnter.filter(function(d,i){
+				return d.position === newPosition;
+			});
+
+			var displacedOrbData = displacedOrbs.data();
+			displacedOrbData[0].position = d.position;
+			displacedOrbs.data(displacedOrbData);
+
+			move(displacedOrbs[0], orbNumberCoords(d.position));
+
+			var thisOrbData = d3this.data();
+			thisOrbData[0].position = newPosition;
+			d3this.data(thisOrbData);
 		}
 	}
 
+	function dragend(d, i){
+		var $this = $(this);
+		$this.removeClass('moving');
+
+		var x = parseInt($this.css('left'));
+		var y = parseInt($this.css('top'));
+		var nearestRowY = Math.round(y / config.rowHeight) * config.rowHeight;
+		var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
+
+		move(this, [nearestColX, nearestRowY]);
+
+		// check for matches
+		var matches = findMatches(orbEnter.data());
+
+		clearMatches(matches, orbEnter.data());
+	}
 
 	function move(element, coords){
 		$(element).css('top', coords[1] + 'px')
@@ -189,8 +185,9 @@
 			return orbsToRemove.indexOf(d.position) === -1;
 		});
 
-		// This doesn't work...
-		// renderOrbs(cleanedData);
+		// TODO: make this work
+		// orbDivs.data(cleanedData);
+		// orbDivs.exit().remove();
 	}
 
 	function convertTo2d(array, size){
