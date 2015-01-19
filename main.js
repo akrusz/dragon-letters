@@ -103,7 +103,7 @@
 			// check for matches
 			var matches = findMatches(orbEnter.data());
 
-			clearMatches(matches);
+			clearMatches(matches, orbEnter.data());
 		}
 	}
 
@@ -168,7 +168,7 @@
 		return colorMatches;
 	}
 
-	function clearMatches(matches){
+	function clearMatches(matches, orbData){
 		var colorMatches = matches.colorMatches;
 		var wordMatches = matches.wordMatches;
 
@@ -184,7 +184,13 @@
 				}
 			}
 		}
-		var x = 5;
+
+		var cleanedData = orbData.filter(function(d){
+			return orbsToRemove.indexOf(d.position) === -1;
+		});
+
+		// This doesn't work...
+		// renderOrbs(cleanedData);
 	}
 
 	function convertTo2d(array, size){
