@@ -1,11 +1,10 @@
-svg {
-  width: 800px;
-  height: 800px;
+body {
+  background: #FFF5F0;
 }
 
 div.game-container {
   background: #FFFFFF;
-  width: 450px;
+  width: 400px;
   padding: 10px;
   border-radius: 10px;
   border: 1px solid #666;
@@ -42,7 +41,7 @@ div.letter {
 }
 
 div.red {
-  background: #EE9999;
+  background: #EE9393;
 }
 
 div.green {
@@ -54,7 +53,7 @@ div.blue {
 }
 
 div.light {
-  background: #EEEE99;
+  background: #FFD055;
 }
 
 div.dark {

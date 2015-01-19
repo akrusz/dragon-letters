@@ -3,7 +3,8 @@
 		totalRows : 6,
 		totalCols : 7,
 		rowHeight : 50,
-		colWidth : 50
+		colWidth : 50,
+		minMatchSize: 3
 	};
 
 	var drag = d3.behavior.drag()
@@ -64,7 +65,7 @@
 				.style('top', top + 'px');
 
 		if(newPosition !== d.position){
-			
+
 			// select the displaced orb element (actually just one)
 			var displacedOrbs = orbEnter.filter(function(d,i){
 				return d.position === newPosition;
@@ -125,9 +126,12 @@
 
 	function matchColors(colors){
 		// colors is a nested array of the orb colors
-		for(var i = 0; i < config.totalRows; i++){
-			for(var j = 0; j < config.totalCols; j++){
-				var x = 5;
+		for(var i = 0; i < config.totalRows - config.minMatchSize; i++){
+			for(var j = 0; j < config.totalCols - config.minMatchSize; j++){
+				// horizontal match
+				if(colors[i][j] === colors[i][j+1] && colors[i][j] === colors[i][j+2]){
+
+				}
 			}
 		}
 	}
