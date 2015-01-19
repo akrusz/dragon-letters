@@ -16,10 +16,9 @@
 
 	var board = d3.select("div.game-board");
 
-	var orbDivs = board.selectAll('div.orb')
-			.data(data);
+	var orbDivs = board.selectAll('div.orb');
 
-	var orbEnter = orbDivs.enter().append("div");
+	var orbEnter = orbDivs.data(data).enter().append("div");
 	orbEnter.style('left', function(d, i){
 		return orbNumberCoords(i, config)[0] + 'px';
 	});
@@ -186,8 +185,9 @@
 		});
 
 		// TODO: make this work
-		// orbDivs.data(cleanedData);
-		// orbDivs.exit().remove();
+		var newOrbs = orbDivs.data(cleanedData);
+		newOrbs.exit().remove();
+		var x = 5;
 	}
 
 	function convertTo2d(array, size){
