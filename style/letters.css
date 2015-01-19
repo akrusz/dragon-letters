@@ -3,24 +3,34 @@ svg {
   height: 800px;
 }
 
+div.game-container {
+  background: #FFFFFF;
+  width: 450px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #666;
+  margin: 0 auto;
+}
+
 div.game-board {
   position: relative;
-  width: 400px;
-  height: 350px;
+  width: 350px;
+  height: 300px;
+  margin: 0 auto;
 }
 
 div.orb {
   position: absolute;
   width: 49px;
   height: 49px;
-  border: 1px solid #666;
+  border: 0px solid #666;
   border-radius: 10px;
   background: white;
   cursor: pointer;
 }
 
 div.moving {
-  z-index: 5;
+  z-index: 100;
   box-shadow: 3px 3px 8px #444;
 }
 
@@ -52,5 +62,5 @@ div.dark {
 }
 
 div.white {
-  background: #EEEEEE;
+  background: #DDDDDD;
 }

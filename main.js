@@ -57,13 +57,14 @@
 		left = limitToBounds(left, 0, config.colWidth * config.totalCols);
 		top = limitToBounds(top, 0, config.rowHeight * config.totalRows);
 
-		var d3this = d3.select(this);
-		d3this.style("left", left + 'px')
-				.style("top", top + 'px');
-
 		var newPosition = coordsOrbNumber([x,y], config);
 
+		var d3this = d3.select(this);
+		d3this.style('left', left + 'px')
+				.style('top', top + 'px');
+
 		if(newPosition !== d.position){
+			
 			// select the displaced orb element (actually just one)
 			var displacedOrbs = orbEnter.filter(function(d,i){
 				return d.position === newPosition;
