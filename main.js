@@ -55,7 +55,11 @@
 			})
 			.call(drag);
 
-		orbSelection.exit().remove();
+		orbSelection.exit()
+			.transition()
+			.duration(200)
+			.style('opacity', 0)
+			.remove();
 	}
 
 	function dragmove(d, i) {
