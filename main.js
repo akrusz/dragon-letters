@@ -17,14 +17,14 @@
 
 	var board = d3.select("div.game-board");
 
-	var orbDivs = board.selectAll('div.orb');
 	var orbSelection;
 
 	updateOrbs(initialData);
 
 	function updateOrbs(data){
 		// existing orbs
-		orbSelection = orbDivs.data(data);
+		orbSelection = board.selectAll('div.orb')
+			.data(data, getPosition);
 
 		// new orbs
 		orbSelection.enter().append("div")
@@ -78,21 +78,20 @@
 				.style('top', top + 'px');
 
 		if(newPosition !== d.position){
-
 			// select the displaced orb element (actually just one)
 			var displacedOrbs = orbSelection.filter(function(d,i){
 				return d.position === newPosition;
 			});
 
-			var displacedOrbData = displacedOrbs.data();
-			displacedOrbData[0].position = d.position;
-			displacedOrbs.data(displacedOrbData);
+			var displacedOrbData = displacedOrbs.datum();
+			displacedOrbData.position = d.position;
+			displacedOrbs.datum(displacedOrbData);
 
 			move(displacedOrbs[0], orbNumberCoords(d.position, config));
 
-			var thisOrbData = d3this.data();
-			thisOrbData[0].position = newPosition;
-			d3this.data(thisOrbData);
+			var thisOrbData = d3this.datum();
+			thisOrbData.position = newPosition;
+			d3this.datum(thisOrbData);
 		}
 	}
 

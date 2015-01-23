@@ -58,3 +58,7 @@ function limitToBounds(value, min, max){
 			? max
 			: value;
 }
+
+function getPosition(d){
+	return d.position;
+}
