@@ -32,8 +32,9 @@
 				return orbNumberCoords(d.position, config)[0] + 'px';
 			})
 			.style('top', function(d, i){
-				return orbNumberCoords(d.position, config)[1] + 'px';
+				return orbNumberCoords(d.position, config)[1] - 300 + 'px';
 			})
+			.style('opacity', 0)
 			.attr("class", function(d, i) {
 				switch(d.color){
 					case 'R':
@@ -53,7 +54,12 @@
 			.html(function(d){
 				return '<div class="letter">' + d.letter + '</div>';
 			})
-			.call(drag);
+			.call(drag)
+			.transition()
+			.style('top', function(d, i){
+				return orbNumberCoords(d.position, config)[1] + 'px';
+			})
+			.style('opacity', 1);
 
 		orbSelection.exit()
 			.transition()
@@ -140,7 +146,44 @@
 	}
 
 	function matchWords(letters){
-		return null;
+		var wordMatches = [];
+
+		for(var i = 0; i < config.totalRows; i++){
+			var thisRowLetters = letters[i].join('');
+			for(var j = 0; j < config.totalCols; j++){
+				// horizontal match, only if there's room
+				if(j < config.totalCols - config.minMatchSize){
+					for(var k = config.totalCols - j; k >= config.minMatchSize; k--){
+						var word = thisRowLetters.substr(j, k);
+						if(Word_List.isInList(word)){
+							alert(word + ": " + scoreWord(word));
+							wordMatches.push([i,j,k,]);
+							continue;
+						}
+					}
+				}
+
+				// vertical match, only if there's room
+				// if(i < config.totalRows - config.minMatchSize + 1 
+				// 	&& thisColor === colors[i+1][j] && thisColor === colors[i+2][j]){
+				// 	wordMatches[thisColor].push([i,j], [i+1,j], [i+2,j]);
+				// 	// TODO: get rid of assumption that minMatchSize = 3
+				// 	for(k = i+config.minMatchSize; k < config.totalRows && thisColor === colors[k][j]; k++){
+				// 		wordMatches[thisColor].push([k,j]);
+				// 	}
+				// }
+			}
+			// keep best matches in the row
+		}
+	}
+
+	function scoreWord(word){
+		score = 0;
+		for(var i = 0; i < word.length; i++){
+			score += Math.floor(7/5 * Math.sqrt(letterFrequency['e']/letterFrequency[word.charAt(i)]));
+		}
+		score *= word.length * word.length;
+		return score;
 	}
 
 	function matchColors(colors){
@@ -166,6 +209,7 @@
 					&& thisColor === colors[i+1][j] && thisColor === colors[i+2][j]){
 					colorMatches[thisColor].push([i,j], [i+1,j], [i+2,j]);
 
+					// TODO: get rid of assumption that minMatchSize = 3
 					for(k = i+3; k < config.totalRows && thisColor === colors[k][j]; k++){
 						colorMatches[thisColor].push([k,j]);
 					}

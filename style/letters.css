@@ -8,7 +8,7 @@ div.game-container {
   padding: 10px;
   border-radius: 10px;
   border: 1px solid #666;
-  margin: 0 auto;
+  margin: 100px auto 0;
 }
 
 div.game-board {

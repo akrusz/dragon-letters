@@ -32,6 +32,12 @@ function randomAtoZ(){
 	}
 }
 
+var letterFrequency = {
+	e: 57, a: 43, r: 39, i: 38, o: 37, t: 35, n: 34, s: 29, l: 28, c: 23, 
+	u: 19, d: 17, p: 16, m: 15, h: 15, g: 13, b: 11, f: 9, y: 9, w: 7,
+	k: 6, v: 5, x: 3, z: 3, j: 2, q: 2
+};
+
 function orbNumberCoords(number, config){
 	var x, y, row, col;
 	row = Math.floor(number / config.totalCols);
