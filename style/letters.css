@@ -18,6 +18,23 @@ div.game-board {
   margin: 0 auto;
 }
 
+div.game-results {
+  background: #FFFFFF;
+  height: 250px;
+  width: 400px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #666;
+  margin: 20px auto;
+}
+
+div.match-result {
+  font-family: sans-serif;
+  font-size: 20px;
+  text-align: center;
+  margin: 7px 0;
+}
+
 div.orb {
   position: absolute;
   width: 49px;

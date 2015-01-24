@@ -17,6 +17,8 @@
 
 	var board = d3.select("div.game-board");
 
+	var $results = $('div.game-results');
+
 	var orbSelection;
 
 	updateOrbs(initialData);
@@ -118,7 +120,7 @@
 
 		// check for matches
 		var matches = findMatches(orbSelection.data());
-
+		displayMatches(matches);
 		clearMatches(matches, orbSelection.data());
 	}
 
@@ -156,8 +158,7 @@
 					for(var k = config.totalCols - j; k >= config.minMatchSize; k--){
 						var word = thisRowLetters.substr(j, k);
 						if(Word_List.isInList(word)){
-							alert(word + ": " + scoreWord(word));
-							wordMatches.push([i,j,k,]);
+							wordMatches.push([i,j,k,word]);
 							continue;
 						}
 					}
@@ -175,6 +176,7 @@
 			}
 			// keep best matches in the row
 		}
+		return wordMatches;
 	}
 
 	function scoreWord(word){
@@ -184,6 +186,18 @@
 		}
 		score *= word.length * word.length;
 		return score;
+	}
+
+	function scoreMatches(matches){
+
+	}
+
+	function displayMatches(matches){
+		var words = matches.wordMatches.map(function(match){return match[3];});
+		for(var i = 0; i < words.length; i++){
+			$results.prepend('<div class="match-result">' + words[i]
+				+ ": " + scoreWord(words[i]) + '</div>');
+		}
 	}
 
 	function matchColors(colors){
