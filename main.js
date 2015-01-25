@@ -160,7 +160,7 @@
 					for(var k = config.totalCols - j; k >= config.minMatchSize; k--){
 						var word = thisRowLetters.substr(j, k);
 						if(Word_List.isInList(word)){
-							wordMatches.push([i,j,k,word]);
+							wordMatches.push(newMatch(i, j, 'horizontal', k, word));
 							continue;
 						}
 					}
@@ -172,7 +172,7 @@
 					for(k = config.totalRows - i; k >= config.minMatchSize; k--){
 						word = thisColLetters.substr(i, k);
 						if(Word_List.isInList(word)){
-							wordMatches.push([i,j,k,word]);
+							wordMatches.push(newMatch(i, j, 'vertical', k, word));
 							continue;
 						}
 					}
@@ -196,7 +196,7 @@
 	}
 
 	function displayMatches(matches){
-		var words = matches.wordMatches.map(function(match){return match[3];});
+		var words = matches.wordMatches.map(function(match){return match.value;});
 		for(var i = 0; i < words.length; i++){
 			$wordResults.prepend('<div class="word-result">' + words[i]
 				+ ": " + scoreWord(words[i]) + '</div>');
@@ -251,19 +251,18 @@
 	}
 
 	function clearMatches(matches, orbData){
-		var colorMatches = matches.colorMatches;
-		var wordMatches = matches.wordMatches;
+		var allMatches = matches.colorMatches.concat(matches.wordMatches);
 
 		var orbsToRemove = [];
 
-		for(matchNum = 0; matchNum <  colorMatches.length; matchNum++){
-			var colorMatch = colorMatches[matchNum];
-			var moreToAdd = colorMatch.orbs;
-			var row = colorMatch.row;
-			var col = colorMatch.col;
-			for(var moreToAdd = colorMatch.orbs; moreToAdd > 0; moreToAdd--){
+		for(var matchNum = 0; matchNum <  allMatches.length; matchNum++){
+			var thisMatch = allMatches[matchNum];
+			var moreToAdd = thisMatch.orbs;
+			var row = thisMatch.row;
+			var col = thisMatch.col;
+			for(var moreToAdd = thisMatch.orbs; moreToAdd > 0; moreToAdd--){
 				orbsToRemove.push(row * config.totalCols + col);
-				if(colorMatch.direction === 'horizontal'){
+				if(thisMatch.direction === 'horizontal'){
 					col++;
 				}
 				else{
@@ -276,6 +275,5 @@
 			return orbsToRemove.indexOf(d.position) === -1;
 		});
 
-		// TODO: make this work
 		updateOrbs(data);
 	}
