@@ -48,7 +48,7 @@ function orbNumberCoords(number, config){
 	return [x, y];
 }
 
-function coordsOrbNumber(coords, config){
+function xyOrbNumber(coords, config){
 	var x = coords[0];
 	var y = coords[1];
 	var row = limitToBounds(Math.floor(y / config.rowHeight), 0, config.totalRows - 1);

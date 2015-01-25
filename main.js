@@ -85,7 +85,7 @@
 		left = limitToBounds(left, 0, config.colWidth * config.totalCols);
 		top = limitToBounds(top, 0, config.rowHeight * config.totalRows);
 
-		var newPosition = coordsOrbNumber([x,y], config);
+		var newPosition = xyOrbNumber([x,y], config);
 
 		var d3this = d3.select(this);
 		d3this.style('left', left + 'px')
@@ -207,7 +207,8 @@
 	function matchColors(colors){
 		// TODO: invert i and j?
 		// colors is a nested array of the orb colors
-		var colorMatches = {R:[],G:[],B:[],L:[],D:[],W:[]};
+		// var colorMatches = {R:[],G:[],B:[],L:[],D:[],W:[]};
+		var colorMatches = [];
 
 		for(var i = 0; i < config.totalRows; i++){
 			for(var j = 0; j < config.totalCols; j++){
@@ -215,22 +216,23 @@
 				// horizontal match, only if there's room
 				if(j < config.totalCols - config.minMatchSize + 1 
 					&& thisColor === colors[i][j+1] && thisColor === colors[i][j+2]){
-					colorMatches[thisColor].push([i,j], [i,j+1], [i,j+2]);
 
 					for(var k = j+3; k < config.totalCols && thisColor === colors[i][k]; k++){
-						colorMatches[thisColor].push([i,k]);
+						//nop
 					}
+
+					colorMatches.push(newMatch(i, j, 'horizontal', k - j, thisColor));
 				}
 
 				// vertical match, only if there's room
 				if(i < config.totalRows - config.minMatchSize + 1 
 					&& thisColor === colors[i+1][j] && thisColor === colors[i+2][j]){
-					colorMatches[thisColor].push([i,j], [i+1,j], [i+2,j]);
 
-					// TODO: get rid of assumption that minMatchSize = 3
 					for(k = i+3; k < config.totalRows && thisColor === colors[k][j]; k++){
-						colorMatches[thisColor].push([k,j]);
+						// nop
 					}
+
+					colorMatches.push(newMatch(i, j, 'vertical', k - i, thisColor));
 				}
 			}
 		}
@@ -238,19 +240,34 @@
 		return colorMatches;
 	}
 
+	function newMatch(row, col, direction, orbs, value){
+		return {
+			row: row,
+			col: col,
+			direction: direction,
+			orbs: orbs,
+			value: value
+		};
+	}
+
 	function clearMatches(matches, orbData){
 		var colorMatches = matches.colorMatches;
 		var wordMatches = matches.wordMatches;
 
 		var orbsToRemove = [];
-		for(var i = 0; i < config.colors.length; i++){
-			var color = config.colors.charAt(i);
-			for(var j = 0; j < colorMatches[color].length; j++){
-				var orbCoords = colorMatches[color][j];
-				var orbNumber = config.totalCols * orbCoords[0] + orbCoords[1]; // see matchColors TODO
-				
-				if(orbsToRemove.indexOf(orbNumber) === -1){
-					orbsToRemove.push(orbNumber);
+
+		for(matchNum = 0; matchNum <  colorMatches.length; matchNum++){
+			var colorMatch = colorMatches[matchNum];
+			var moreToAdd = colorMatch.orbs;
+			var row = colorMatch.row;
+			var col = colorMatch.col;
+			for(var moreToAdd = colorMatch.orbs; moreToAdd > 0; moreToAdd--){
+				orbsToRemove.push(row * config.totalCols + col);
+				if(colorMatch.direction === 'horizontal'){
+					col++;
+				}
+				else{
+					row++;
 				}
 			}
 		}
