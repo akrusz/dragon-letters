@@ -18,6 +18,8 @@
 	var board = d3.select("div.game-board");
 
 	var $results = $('div.game-results');
+	var $wordResults = $('div.word-results');
+
 
 	var orbSelection;
 
@@ -196,7 +198,7 @@
 	function displayMatches(matches){
 		var words = matches.wordMatches.map(function(match){return match[3];});
 		for(var i = 0; i < words.length; i++){
-			$results.prepend('<div class="match-result">' + words[i]
+			$wordResults.prepend('<div class="word-result">' + words[i]
 				+ ": " + scoreWord(words[i]) + '</div>');
 		}
 
