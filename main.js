@@ -165,16 +165,17 @@
 				}
 
 				// vertical match, only if there's room
-				// if(i < config.totalRows - config.minMatchSize + 1 
-				// 	&& thisColor === colors[i+1][j] && thisColor === colors[i+2][j]){
-				// 	wordMatches[thisColor].push([i,j], [i+1,j], [i+2,j]);
-				// 	// TODO: get rid of assumption that minMatchSize = 3
-				// 	for(k = i+config.minMatchSize; k < config.totalRows && thisColor === colors[k][j]; k++){
-				// 		wordMatches[thisColor].push([k,j]);
-				// 	}
-				// }
+				var thisColLetters = letters.map(function(row){return row[j];}).join('');
+				if(i < config.totalRows - config.minMatchSize){
+					for(k = config.totalRows - i; k >= config.minMatchSize; k--){
+						word = thisColLetters.substr(i, k);
+						if(Word_List.isInList(word)){
+							wordMatches.push([i,j,k,word]);
+							continue;
+						}
+					}
+				}
 			}
-			// keep best matches in the row
 		}
 		return wordMatches;
 	}
@@ -198,6 +199,7 @@
 			$results.prepend('<div class="match-result">' + words[i]
 				+ ": " + scoreWord(words[i]) + '</div>');
 		}
+
 	}
 
 	function matchColors(colors){
