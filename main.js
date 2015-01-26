@@ -4,7 +4,7 @@
 		totalCols : 7,
 		rowHeight : 50,
 		colWidth : 50,
-		minMatchSize: 3,
+		minMatchSize: 4,
 		colors: 'RGBLDW'
 	};
 
@@ -289,9 +289,23 @@
 			positionsPresent[data[i].position] = true;
 		}
 
-		for(i = 0; i < data.length; i++){
-			if(!positionsPresent[i + config.totalCols]){
-				data[i].position += config.totalCols;
+		for(i = config.totalCols*(config.totalRows - 1) - 1; i >=0; i--){
+			if(positionsPresent[i] && !positionsPresent[i + config.totalCols]){
+				var fallingOrbIndex;
+				var fallingOrbData = data.filter(function(d, index){
+					
+					if(d.position === i){
+						fallingOrbIndex = index;
+						return true;
+					}
+					return false;
+				});
+
+				fallingOrbData[0].position += config.totalCols;
+				data[fallingOrbIndex] = fallingOrbData[0];
+
+				positionsPresent[i] = false;
+				positionsPresent[i + config.totalCols] = true;
 			}
 		}
 
