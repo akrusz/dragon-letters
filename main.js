@@ -70,6 +70,7 @@
 			.duration(200)
 			.style('opacity', 0)
 			.remove();
+
 	}
 
 	function dragmove(d, i) {
@@ -121,9 +122,14 @@
 		move(this, [nearestColX, nearestRowY]);
 
 		// check for matches
-		var matches = findMatches(orbSelection.data());
+		// TODO: break this out
+		var data = orbSelection.data();
+		var matches = findMatches(data);
 		displayMatches(matches);
-		clearMatches(matches, orbSelection.data());
+		data = clearMatches(matches, data);
+		updateOrbs(data);
+		// fillBoard(data);
+		// updateOrbs(data);
 	}
 
 	function move(element, coords){
@@ -205,9 +211,7 @@
 	}
 
 	function matchColors(colors){
-		// TODO: invert i and j?
-		// colors is a nested array of the orb colors
-		// var colorMatches = {R:[],G:[],B:[],L:[],D:[],W:[]};
+		// colors is a 2d array of the orb colors
 		var colorMatches = [];
 
 		for(var i = 0; i < config.totalRows; i++){
@@ -271,9 +275,11 @@
 			}
 		}
 
-		data = orbData.filter(function(d){
+		return orbData.filter(function(d){
 			return orbsToRemove.indexOf(d.position) === -1;
 		});
+	}
 
-		updateOrbs(data);
+	function fillBoard(data){
+
 	}
