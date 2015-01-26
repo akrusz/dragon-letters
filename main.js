@@ -123,10 +123,14 @@
 
 		// check for matches
 		// TODO: break this out
-		var data = orbSelection.data();
+		var data = orbSelection.data().sort(function(a, b){
+				return d3.ascending(a.position, b.position)
+			});
 		var matches = findMatches(data);
 		displayMatches(matches);
 		data = clearMatches(matches, data);
+		updateOrbs(data);
+		data = dropOrbs(data);
 		updateOrbs(data);
 		// fillBoard(data);
 		// updateOrbs(data);
@@ -138,13 +142,10 @@
 	}
 
 	function findMatches(data){
-		var orbs = data.sort(function(a, b){
-				return d3.ascending(a.position, b.position)
-			});
-		var orbLetters = orbs.map(function(d){
+		var orbLetters = data.map(function(d){
 				return d.letter;
 			});
-		var orbColors = orbs.map(function(d){
+		var orbColors = data.map(function(d){
 				return d.color;
 			});
 
@@ -280,6 +281,19 @@
 		});
 	}
 
-	function fillBoard(data){
+	function dropOrbs(data){
+		// assumes data is sorted
+		// var hasEmpty = data[0].map(function(){return false;});
+		var positionsPresent = [];
+		for(i = 0; i < data.length; i++){
+			positionsPresent[data[i].position] = true;
+		}
 
+		for(i = 0; i < data.length; i++){
+			if(!positionsPresent[i + config.totalCols]){
+				data[i].position += config.totalCols;
+			}
+		}
+
+		return data;
 	}
