@@ -163,7 +163,7 @@
 			var thisRowLetters = letters[i].join('');
 			for(var j = 0; j < config.totalCols; j++){
 				// horizontal match, only if there's room
-				if(j < config.totalCols - config.minMatchSize){
+				if(j <= config.totalCols - config.minMatchSize){
 					for(var k = config.totalCols - j; k >= config.minMatchSize; k--){
 						var word = thisRowLetters.substr(j, k);
 						if(Word_List.isInList(word)){
@@ -175,7 +175,7 @@
 
 				// vertical match, only if there's room
 				var thisColLetters = letters.map(function(row){return row[j];}).join('');
-				if(i < config.totalRows - config.minMatchSize){
+				if(i <= config.totalRows - config.minMatchSize){
 					for(k = config.totalRows - i; k >= config.minMatchSize; k--){
 						word = thisColLetters.substr(i, k);
 						if(Word_List.isInList(word)){
