@@ -17,16 +17,18 @@ function randomOrb(position, config){
 }
 
 function randomAtoZ(){
-	var lookup = {
+	var sumFrequencies = {};
+	var runningTotal = 0;
+	for(var letter in letterFrequency){
+		runningTotal += letterFrequency[letter];
+		sumFrequencies[letter] = runningTotal;
+	}
 	// Ranges modified from data found at
 	// http://www.oxforddictionaries.com/us/words/what-is-the-frequency-of-the-letters-of-the-alphabet-in-english
-	e: 57, a: 100, r: 139, i: 177, o: 214, t: 249, n: 283, l: 301, c: 323,
-	u: 342, d: 359, p: 375, m: 390, h: 405, g: 418, b: 429, f: 438,
-	y: 447, w: 454, k: 460, v: 465, x: 468, z: 471, j: 473, q: 475};
-	var random = Math.random() * 475,
-			letter;
-	for (letter in lookup) {
-		if (random < lookup[letter]) {
+	
+	var random = Math.random() * runningTotal;
+	for (letter in letterFrequency) {
+		if (random < sumFrequencies[letter]) {
 			return letter;
 		}
 	}

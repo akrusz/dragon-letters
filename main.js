@@ -144,12 +144,10 @@
 			});
 		var matches = findMatches(data);
 		displayMatches(matches);
-		data = clearMatches(matches, data);
+		var data = clearMatches(matches, data);
 		updateOrbs(data);
 		data = dropOrbs(data);
 		updateOrbs(data);
-		// fillBoard(data);
-		// updateOrbs(data);
 	}
 
 	function move(element, coords){
@@ -299,12 +297,12 @@
 
 	function dropOrbs(data){
 		// assumes data is sorted
-		// var hasEmpty = data[0].map(function(){return false;});
 		var positionsPresent = [];
 		for(var i = 0; i < data.length; i++){
 			positionsPresent[data[i].position] = true;
 		}
 
+		// drop existing orbs
 		for(i = config.totalCols*(config.totalRows - 1) - 1; i >=0; i--){
 			if(positionsPresent[i] && !positionsPresent[i + config.totalCols]){
 				var fallingOrbIndex;
@@ -322,6 +320,13 @@
 
 				positionsPresent[i] = false;
 				positionsPresent[i + config.totalCols] = true;
+			}
+		}
+
+		// drop new row of orbs
+		for(i = 0; i < config.totalCols; i++){
+			if(!positionsPresent[i]){
+				data.push(randomOrb(i, config));
 			}
 		}
 
