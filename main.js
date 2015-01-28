@@ -22,10 +22,9 @@
 
 
 	var orbSelection;
+	enterOrbs(initialData);
 
-	updateOrbs(initialData);
-
-	function updateOrbs(data){
+	function enterOrbs(data){
 		// existing orbs
 		orbSelection = board.selectAll('div.orb')
 			.data(data, getPosition);
@@ -65,12 +64,29 @@
 			})
 			.style('opacity', 1);
 
+
+
+	}
+
+	function updateOrbs(data){
+		// existing orbs
+		orbSelection = board.selectAll('div.orb')
+			.data(data, getPosition);
+
+		orbSelection
+			.transition()
+			.style('left', function(d, i){
+				return orbNumberCoords(d.position, config)[0] + 'px';
+			})
+			.style('top', function(d, i){
+				return orbNumberCoords(d.position, config)[1] + 'px';
+			});
+
 		orbSelection.exit()
 			.transition()
 			.duration(200)
 			.style('opacity', 0)
 			.remove();
-
 	}
 
 	function dragmove(d, i) {
@@ -285,7 +301,7 @@
 		// assumes data is sorted
 		// var hasEmpty = data[0].map(function(){return false;});
 		var positionsPresent = [];
-		for(i = 0; i < data.length; i++){
+		for(var i = 0; i < data.length; i++){
 			positionsPresent[data[i].position] = true;
 		}
 
