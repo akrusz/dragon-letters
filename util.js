@@ -29,7 +29,7 @@ function randomAtoZ(){
 	}
 	// Ranges modified from data found at
 	// http://www.oxforddictionaries.com/us/words/what-is-the-frequency-of-the-letters-of-the-alphabet-in-english
-	
+
 	var random = Math.random() * runningTotal;
 	for (letter in letterFrequency) {
 		if (random < sumFrequencies[letter]) {
@@ -39,10 +39,27 @@ function randomAtoZ(){
 }
 
 var letterFrequency = {
-	e: 57, a: 43, r: 39, i: 38, o: 37, t: 35, n: 34, s: 29, l: 28, c: 23, 
+	e: 57, a: 43, r: 39, i: 38, o: 37, t: 35, n: 34, s: 29, l: 28, c: 23,
 	u: 19, d: 17, p: 16, m: 15, h: 15, g: 13, b: 11, f: 9, y: 9, w: 7,
 	k: 6, v: 5, x: 3, z: 3, j: 2, q: 2
 };
+
+function scoreWord(word){
+	score = 0;
+	for(var i = 0; i < word.length; i++){
+		score += scoreLetter(word.charAt(i));
+	}
+	score *= word.length * word.length;
+	return score;
+}
+
+function scoreLetter(letter){
+	return Math.floor(7/5 * Math.sqrt(letterFrequency['e']/letterFrequency[letter]));
+}
+
+function scoreMatches(matches){
+
+}
 
 function orbNumberCoords(number, config){
 	var x, y, row, col;

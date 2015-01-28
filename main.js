@@ -93,7 +93,7 @@
 	function dragmove(d, i) {
 		var $this = $(this);
 		$this.addClass('moving');
-		
+
 		var x = d3.event.x;
 		var y = d3.event.y;
 
@@ -132,7 +132,7 @@
 		$this.removeClass('moving');
 
 		var x = parseInt($this.css('left'));
-		var y = parseInt($this.css('top'));	
+		var y = parseInt($this.css('top'));
 		var nearestRowY = Math.round(y / config.rowHeight) * config.rowHeight;
 		var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
 
@@ -146,7 +146,7 @@
 		displayMatches(matches);
 		data = clearMatches(matches, data);
 		//updateOrbs(data);
-		
+
 		// while(data.length < config.totalRows*config.totalCols){
 		// 	while(data.length < config.totalRows*config.totalCols){
 
@@ -183,7 +183,7 @@
 		// convert to 2d array
 		orbColors = convertTo2d(orbColors, config.totalCols);
 		orbLetters = convertTo2d(orbLetters, config.totalCols);
-		
+
 		return {colorMatches: matchColors(orbColors), wordMatches: matchWords(orbLetters)};
 	}
 
@@ -220,18 +220,7 @@
 		return wordMatches;
 	}
 
-	function scoreWord(word){
-		score = 0;
-		for(var i = 0; i < word.length; i++){
-			score += Math.floor(7/5 * Math.sqrt(letterFrequency['e']/letterFrequency[word.charAt(i)]));
-		}
-		score *= word.length * word.length;
-		return score;
-	}
 
-	function scoreMatches(matches){
-
-	}
 
 	function displayMatches(matches){
 		var words = matches.wordMatches.map(function(match){return match.value;});
@@ -251,7 +240,7 @@
 			for(var j = 0; j < config.totalCols; j++){
 				var thisColor = colors[i][j];
 				// horizontal match, only if there's room
-				if(j < config.totalCols - config.minMatchSize + 1 
+				if(j < config.totalCols - config.minMatchSize + 1
 					&& thisColor === colors[i][j+1] && thisColor === colors[i][j+2]){
 
 					for(var k = j+3; k < config.totalCols && thisColor === colors[i][k]; k++){
@@ -262,7 +251,7 @@
 				}
 
 				// vertical match, only if there's room
-				if(i < config.totalRows - config.minMatchSize + 1 
+				if(i < config.totalRows - config.minMatchSize + 1
 					&& thisColor === colors[i+1][j] && thisColor === colors[i+2][j]){
 
 					for(k = i+3; k < config.totalRows && thisColor === colors[k][j]; k++){
@@ -315,7 +304,7 @@
 
 	function dropOrbs(data){
 		data = sortPosition(data);
-		
+
 		var positionsPresent = [];
 		for(var i = 0; i < data.length; i++){
 			positionsPresent[data[i].position] = true;
@@ -326,7 +315,7 @@
 			if(positionsPresent[i] && !positionsPresent[i + config.totalCols]){
 				var fallingOrbIndex;
 				var fallingOrbData = data.filter(function(d, index){
-					
+
 					if(d.position === i){
 						fallingOrbIndex = index;
 						return true;
