@@ -142,12 +142,14 @@
 		var data = orbSelection.data().sort(function(a, b){
 				return d3.ascending(a.position, b.position)
 			});
+		
 		var matches = findMatches(data);
 		displayMatches(matches);
-		var data = clearMatches(matches, data);
+		data = clearMatches(matches, data);
 		updateOrbs(data);
 		data = dropOrbs(data);
 		updateOrbs(data);
+		enterOrbs(data);
 	}
 
 	function move(element, coords){
