@@ -150,8 +150,8 @@
 		// while(data.length < config.totalRows*config.totalCols){
 		// 	while(data.length < config.totalRows*config.totalCols){
 
-				data = dropOrbs(data);
-				// data = dropNewOrbs(data);
+				//data = dropOrbs(data);
+				//data = dropNewOrbs(data);
 
 				updateOrbs(data);
 				//enterOrbs(data);
@@ -320,7 +320,7 @@
 		for(var i = 0; i < data.length; i++){
 			positionsPresent[data[i].position] = true;
 		}
-		
+
 		// drop existing orbs
 		for(i = config.totalCols*(config.totalRows - 1) - 1; i >=0; i--){
 			if(positionsPresent[i] && !positionsPresent[i + config.totalCols]){
@@ -335,7 +335,6 @@
 				});
 
 				fallingOrbData[0].position += config.totalCols;
-				data[fallingOrbIndex] = fallingOrbData[0];
 
 				positionsPresent[i] = false;
 				positionsPresent[i + config.totalCols] = true;
@@ -347,7 +346,7 @@
 
 	function dropNewOrbs(data){
 		data = sortPosition(data);
-		var positionsPresent = [];
+		var positionsPresent = data.map(function(d){return d.position;});
 		for(var i = 0; i < data.length; i++){
 			positionsPresent[data[i].position] = true;
 		}
