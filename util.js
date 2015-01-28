@@ -7,12 +7,16 @@ function convertTo2d(array, size){
 	return newArray;
 }
 
+var orbsCreated = 0;
+
 function randomOrb(position, config){
 	var orb = {};
 
 	orb.letter = randomAtoZ();
 	orb.position = position;
 	orb.color = config.colors[Math.floor(config.colors.length * Math.random())];
+	orb.id = orbsCreated;
+	orbsCreated += 1;
 	return orb;
 }
 
@@ -69,4 +73,14 @@ function limitToBounds(value, min, max){
 
 function getPosition(d){
 	return d.position;
+}
+
+function getId(d){
+	return d.id;
+}
+
+function sortPosition(data) {
+	return data.sort(function(a, b){
+			return d3.ascending(a.position, b.position)
+		});
 }

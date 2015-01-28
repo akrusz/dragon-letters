@@ -27,7 +27,7 @@
 	function enterOrbs(data){
 		// existing orbs
 		orbSelection = board.selectAll('div.orb')
-			.data(data, getPosition);
+			.data(data, getId);
 
 		// new orbs
 		orbSelection.enter().append("div")
@@ -35,7 +35,7 @@
 				return orbNumberCoords(d.position, config)[0] + 'px';
 			})
 			.style('top', function(d, i){
-				return orbNumberCoords(d.position, config)[1] - 300 + 'px';
+				return orbNumberCoords(d.position, config)[1] - 200 + 'px';
 			})
 			.style('opacity', 0)
 			.attr("class", function(d, i) {
@@ -75,6 +75,7 @@
 
 		orbSelection
 			.transition()
+			.duration(400)
 			.style('left', function(d, i){
 				return orbNumberCoords(d.position, config)[0] + 'px';
 			})
@@ -131,7 +132,7 @@
 		$this.removeClass('moving');
 
 		var x = parseInt($this.css('left'));
-		var y = parseInt($this.css('top'));
+		var y = parseInt($this.css('top'));	
 		var nearestRowY = Math.round(y / config.rowHeight) * config.rowHeight;
 		var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
 
@@ -139,17 +140,29 @@
 
 		// check for matches
 		// TODO: break this out
-		var data = orbSelection.data().sort(function(a, b){
-				return d3.ascending(a.position, b.position)
-			});
-		
+		var data = orbSelection.data();
+
 		var matches = findMatches(data);
 		displayMatches(matches);
 		data = clearMatches(matches, data);
-		updateOrbs(data);
-		data = dropOrbs(data);
-		updateOrbs(data);
-		enterOrbs(data);
+		//updateOrbs(data);
+		
+		// while(data.length < config.totalRows*config.totalCols){
+		// 	while(data.length < config.totalRows*config.totalCols){
+
+				data = dropOrbs(data);
+				// data = dropNewOrbs(data);
+
+				updateOrbs(data);
+				//enterOrbs(data);
+
+		// 	}
+
+		// 	matches = findMatches(data);
+		// 	displayMatches(matches);
+		// 	data = clearMatches(matches, data);
+		// 	updateOrbs(data);
+		// }
 	}
 
 	function move(element, coords){
@@ -158,6 +171,8 @@
 	}
 
 	function findMatches(data){
+		data = sortPosition(data);
+
 		var orbLetters = data.map(function(d){
 				return d.letter;
 			});
@@ -228,6 +243,7 @@
 	}
 
 	function matchColors(colors){
+		return [];
 		// colors is a 2d array of the orb colors
 		var colorMatches = [];
 
@@ -298,12 +314,13 @@
 	}
 
 	function dropOrbs(data){
-		// assumes data is sorted
+		data = sortPosition(data);
+		
 		var positionsPresent = [];
 		for(var i = 0; i < data.length; i++){
 			positionsPresent[data[i].position] = true;
 		}
-
+		
 		// drop existing orbs
 		for(i = config.totalCols*(config.totalRows - 1) - 1; i >=0; i--){
 			if(positionsPresent[i] && !positionsPresent[i + config.totalCols]){
@@ -323,6 +340,16 @@
 				positionsPresent[i] = false;
 				positionsPresent[i + config.totalCols] = true;
 			}
+		}
+
+		return data;
+	}
+
+	function dropNewOrbs(data){
+		data = sortPosition(data);
+		var positionsPresent = [];
+		for(var i = 0; i < data.length; i++){
+			positionsPresent[data[i].position] = true;
 		}
 
 		// drop new row of orbs
