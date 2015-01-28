@@ -58,9 +58,19 @@ div.moving {
 
 div.letter {
   font-family: sans-serif;
-  font-size: 36px;
-  text-align: center;
+  font-size: 30px;
+  position: absolute;
+  left: 16px;
+  top: 6px;
   margin: 7px 0;
+}
+
+div.letterPoint{
+  font-family: sans-serif;
+  font-size: 12px;
+  text-align:  right;
+  color: #FFFFFF;
+  margin: 7px;
 }
 
 div.red {
