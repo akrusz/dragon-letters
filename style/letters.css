@@ -59,18 +59,23 @@ div.moving {
 div.letter {
   font-family: sans-serif;
   font-size: 30px;
-  position: absolute;
-  left: 16px;
-  top: 6px;
-  margin: 7px 0;
+  margin-top: 12px;
+  text-align: center;
 }
 
-div.letterPoint{
+div.letter-points{
+  position: absolute;
+  top: 0;
+  right: 0;
   font-family: sans-serif;
   font-size: 12px;
   text-align:  right;
   color: #FFFFFF;
-  margin: 7px;
+  margin: 6px 6px 2px 2px;
+}
+
+div.letter-points span {
+  
 }
 
 div.red {
@@ -78,7 +83,7 @@ div.red {
 }
 
 div.green {
-  background: #99EE99;
+  background: #90E090;
 }
 
 div.blue {
@@ -86,7 +91,7 @@ div.blue {
 }
 
 div.light {
-  background: #FFD055;
+  background: #F0C850;
 }
 
 div.dark {
@@ -94,5 +99,5 @@ div.dark {
 }
 
 div.white {
-  background: #DDDDDD;
+  background: #D0D0D0;
 }

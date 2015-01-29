@@ -55,8 +55,8 @@
 				}
 			})
 			.html(function(d){
-				return '<div class="letter">' +d.letter + '</div>'
-				+'<div class="letterPoint">' + scoreLetter(d.letter)+'</div>';
+				return '<div class="letter"><span>' + d.letter + '</span></div>'
+				+'<div class="letter-points"><span>' + scoreLetter(d.letter) + '</span></div>';
 			})
 			.call(drag)
 			.transition()
