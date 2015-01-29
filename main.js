@@ -151,10 +151,11 @@
 		// while(data.length < config.totalRows*config.totalCols){
 		// 	while(data.length < config.totalRows*config.totalCols){
 
-				//data = dropOrbs(data);
+				data = dropExistingOrbs(data);
 				//data = dropNewOrbs(data);
 
 				updateOrbs(data);
+				//updateOrbs(data);
 				//enterOrbs(data);
 
 		// 	}
@@ -169,112 +170,6 @@
 	function move(element, coords){
 		$(element).css('top', coords[1] + 'px')
 			.css('left', coords[0] + 'px');
-	}
-
-	function findMatches(data){
-		data = sortPosition(data);
-
-		var orbLetters = data.map(function(d){
-				return d.letter;
-			});
-		var orbColors = data.map(function(d){
-				return d.color;
-			});
-
-		// convert to 2d array
-		orbColors = convertTo2d(orbColors, config.totalCols);
-		orbLetters = convertTo2d(orbLetters, config.totalCols);
-
-		return {colorMatches: matchColors(orbColors), wordMatches: matchWords(orbLetters)};
-	}
-
-	function matchWords(letters){
-		var wordMatches = [];
-
-		for(var i = 0; i < config.totalRows; i++){
-			var thisRowLetters = letters[i].join('');
-			for(var j = 0; j < config.totalCols; j++){
-				// horizontal match, only if there's room
-				if(j <= config.totalCols - config.minMatchSize){
-					for(var k = config.totalCols - j; k >= config.minMatchSize; k--){
-						var word = thisRowLetters.substr(j, k);
-						if(Word_List.isInList(word)){
-							wordMatches.push(newMatch(i, j, 'horizontal', k, word));
-							continue;
-						}
-					}
-				}
-
-				// vertical match, only if there's room
-				var thisColLetters = letters.map(function(row){return row[j];}).join('');
-				if(i <= config.totalRows - config.minMatchSize){
-					for(k = config.totalRows - i; k >= config.minMatchSize; k--){
-						word = thisColLetters.substr(i, k);
-						if(Word_List.isInList(word)){
-							wordMatches.push(newMatch(i, j, 'vertical', k, word));
-							continue;
-						}
-					}
-				}
-			}
-		}
-		return wordMatches;
-	}
-
-
-
-	function displayMatches(matches){
-		var words = matches.wordMatches.map(function(match){return match.value;});
-		for(var i = 0; i < words.length; i++){
-			$wordResults.prepend('<div class="word-result">' + words[i]
-				+ ": " + scoreWord(words[i]) + '</div>');
-		}
-
-	}
-
-	function matchColors(colors){
-		return [];
-		// colors is a 2d array of the orb colors
-		var colorMatches = [];
-
-		for(var i = 0; i < config.totalRows; i++){
-			for(var j = 0; j < config.totalCols; j++){
-				var thisColor = colors[i][j];
-				// horizontal match, only if there's room
-				if(j < config.totalCols - config.minMatchSize + 1
-					&& thisColor === colors[i][j+1] && thisColor === colors[i][j+2]){
-
-					for(var k = j+3; k < config.totalCols && thisColor === colors[i][k]; k++){
-						//nop
-					}
-
-					colorMatches.push(newMatch(i, j, 'horizontal', k - j, thisColor));
-				}
-
-				// vertical match, only if there's room
-				if(i < config.totalRows - config.minMatchSize + 1
-					&& thisColor === colors[i+1][j] && thisColor === colors[i+2][j]){
-
-					for(k = i+3; k < config.totalRows && thisColor === colors[k][j]; k++){
-						// nop
-					}
-
-					colorMatches.push(newMatch(i, j, 'vertical', k - i, thisColor));
-				}
-			}
-		}
-
-		return colorMatches;
-	}
-
-	function newMatch(row, col, direction, orbs, value){
-		return {
-			row: row,
-			col: col,
-			direction: direction,
-			orbs: orbs,
-			value: value
-		};
 	}
 
 	function clearMatches(matches, orbData){
@@ -303,7 +198,7 @@
 		});
 	}
 
-	function dropOrbs(data){
+	function dropExistingOrbs(data){
 		data = sortPosition(data);
 
 		var positionsPresent = [];
