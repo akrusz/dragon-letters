@@ -4,7 +4,7 @@
 		totalCols : 7,
 		rowHeight : 50,
 		colWidth : 50,
-		minMatchSize: 3,
+		minMatchSize: 4,
 		colors: 'RGBLDW'
 	};
 
@@ -147,25 +147,34 @@
 		displayMatches(matches);
 		data = clearMatches(matches, data);
 
-		// while(data.length < config.totalRows*config.totalCols){
-			var dropOrbLoop = function(){
-
-				data = dropExistingOrbs(data);
-				updateOrbs(data);
-				data = dropNewOrbs(data);
-				enterOrbs(data);
-				if(data.length < config.totalRows*config.totalCols){
-					setTimeout(dropOrbLoop, 200);
-				}
-
-
+		var dropOrbsIteration = function(){
+			if(data.length === config.totalRows*config.totalCols){
+				return;
 			}
-			dropOrbLoop();
-			// matches = findMatches(data);
-			// displayMatches(matches);
-			// data = clearMatches(matches, data);
-			// updateOrbs(data);
-		//}
+
+			data = dropExistingOrbs(data);
+			updateOrbs(data);
+			data = dropNewOrbs(data);
+			enterOrbs(data);
+			
+			// if board's not full yet
+			if(data.length < config.totalRows*config.totalCols){
+				setTimeout(dropOrbsIteration, 200);
+			}
+			else{
+				setTimeout(checkMatchesIteration, 250);
+			}
+		}
+
+		var checkMatchesIteration = function(){
+			matches = findMatches(data);
+			displayMatches(matches);
+			data = clearMatches(matches, data);
+			dropOrbsIteration();
+		}
+
+		dropOrbsIteration(data);
+
 	}
 
 	function move(element, coords){
