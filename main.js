@@ -87,7 +87,7 @@
 			.transition()
 			.duration(300)
 			.style('opacity', 0)
-			.style('height', '100px')
+			.style('height', '80px')
 			.remove();
 	}
 

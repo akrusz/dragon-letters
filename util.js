@@ -44,23 +44,6 @@ var letterFrequency = {
 	k: 6, v: 5, x: 3, z: 3, j: 2, q: 2
 };
 
-function scoreWord(word){
-	score = 0;
-	for(var i = 0; i < word.length; i++){
-		score += scoreLetter(word.charAt(i));
-	}
-	score *= word.length * word.length;
-	return score;
-}
-
-function scoreLetter(letter){
-	return Math.floor(7/5 * Math.sqrt(letterFrequency['e']/letterFrequency[letter]));
-}
-
-function scoreMatches(matches){
-
-}
-
 function orbNumberCoords(number, config){
 	var x, y, row, col;
 	row = Math.floor(number / config.totalCols);

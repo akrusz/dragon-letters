@@ -103,6 +103,8 @@ function matchColors(colors){
 }
 
 function newMatch(row, col, direction, orbs, value){
+	// value should contain the word or the color letter.
+	// no ambiguity since word matches are at least 3 characters
 	return {
 		row: row,
 		col: col,
@@ -110,4 +112,27 @@ function newMatch(row, col, direction, orbs, value){
 		orbs: orbs,
 		value: value
 	};
+}
+
+function scoreWord(word){
+	score = 0;
+	for(var i = 0; i < word.length; i++){
+		score += scoreLetter(word.charAt(i));
+	}
+	score *= word.length * word.length;
+	return score;
+}
+
+function scoreLetter(letter){
+	return Math.floor(7/5 * Math.sqrt(letterFrequency['e']/letterFrequency[letter]));
+}
+
+function scoreMatches(matches){
+	var baseScores = matches.map(function(match){
+		return scoreWord(match.value);
+	});
+	var totalBaseScore = baseScores.reduce(function(a, b){
+		return a + b;
+	});
+	return totalBaseScore + 0.25 * totalBaseScore * (matches.length - 1);
 }
