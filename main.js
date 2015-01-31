@@ -76,7 +76,8 @@
 
 		orbSelection
 			.transition()
-			.duration(100)
+			.duration(200)
+			.ease('linear')
 			.style('left', function(d, i){
 				return orbNumberCoords(d.position, config)[0] + 'px';
 			})
