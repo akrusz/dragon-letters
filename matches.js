@@ -60,7 +60,6 @@ function displayMatches(matches){
 }
 
 function matchColors(colors){
-	return [];
 	// colors is a 2d array of the orb colors
 	var colorMatches = [];
 
@@ -68,10 +67,11 @@ function matchColors(colors){
 		for(var j = 0; j < config.totalCols; j++){
 			var thisColor = colors[i][j];
 			// horizontal match, only if there's room
+			// TODO fix this to remove hardcoding of minMatchSize = 3
 			if(j < config.totalCols - config.minMatchSize + 1
 				&& thisColor === colors[i][j+1] && thisColor === colors[i][j+2]){
 
-				for(var k = j+3; k < config.totalCols && thisColor === colors[i][k]; k++){
+				for(var k = j+config.minMatchSize; k < config.totalCols && thisColor === colors[i][k]; k++){
 					//nop
 				}
 
@@ -82,7 +82,7 @@ function matchColors(colors){
 			if(i < config.totalRows - config.minMatchSize + 1
 				&& thisColor === colors[i+1][j] && thisColor === colors[i+2][j]){
 
-				for(k = i+3; k < config.totalRows && thisColor === colors[k][j]; k++){
+				for(k = i+config.minMatchSize; k < config.totalRows && thisColor === colors[k][j]; k++){
 					// nop
 				}
 

@@ -4,7 +4,7 @@
 		totalCols : 7,
 		rowHeight : 50,
 		colWidth : 50,
-		minMatchSize: 4,
+		minMatchSize: 3,
 		colors: 'RGBLDW'
 	};
 
@@ -35,7 +35,7 @@
 				return orbNumberCoords(d.position, config)[0] + 'px';
 			})
 			.style('top', function(d, i){
-				return orbNumberCoords(d.position, config)[1] - 200 + 'px';
+				return orbNumberCoords(d.position, config)[1] - 100 + 'px';
 			})
 			.style('opacity', 0)
 			.attr("class", function(d, i) {
@@ -59,7 +59,7 @@
 				+'<div class="letter-points"><span>' + scoreLetter(d.letter) + '</span></div>';
 			})
 			.call(drag)
-			.transition()
+			.transition(400)
 			.style('top', function(d, i){
 				return orbNumberCoords(d.position, config)[1] + 'px';
 			})
@@ -72,11 +72,11 @@
 	function updateOrbs(data){
 		// existing orbs
 		orbSelection = board.selectAll('div.orb')
-			.data(data, getPosition);
+			.data(data, getId);
 
 		orbSelection
 			.transition()
-			.duration(400)
+			.duration(100)
 			.style('left', function(d, i){
 				return orbNumberCoords(d.position, config)[0] + 'px';
 			})
@@ -146,25 +146,26 @@
 		var matches = findMatches(data);
 		displayMatches(matches);
 		data = clearMatches(matches, data);
-		//updateOrbs(data);
 
 		// while(data.length < config.totalRows*config.totalCols){
-		// 	while(data.length < config.totalRows*config.totalCols){
+			var dropOrbLoop = function(){
 
 				data = dropExistingOrbs(data);
-				//data = dropNewOrbs(data);
-
 				updateOrbs(data);
-				//updateOrbs(data);
-				//enterOrbs(data);
+				data = dropNewOrbs(data);
+				enterOrbs(data);
+				if(data.length < config.totalRows*config.totalCols){
+					setTimeout(dropOrbLoop, 200);
+				}
 
-		// 	}
 
-		// 	matches = findMatches(data);
-		// 	displayMatches(matches);
-		// 	data = clearMatches(matches, data);
-		// 	updateOrbs(data);
-		// }
+			}
+			dropOrbLoop();
+			// matches = findMatches(data);
+			// displayMatches(matches);
+			// data = clearMatches(matches, data);
+			// updateOrbs(data);
+		//}
 	}
 
 	function move(element, coords){
@@ -231,7 +232,7 @@
 
 	function dropNewOrbs(data){
 		data = sortPosition(data);
-		var positionsPresent = data.map(function(d){return d.position;});
+		var positionsPresent = [];
 		for(var i = 0; i < data.length; i++){
 			positionsPresent[data[i].position] = true;
 		}
@@ -241,6 +242,7 @@
 			if(!positionsPresent[i]){
 				data.push(randomOrb(i, config));
 			}
+
 		}
 
 		return data;
