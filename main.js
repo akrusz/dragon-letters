@@ -163,7 +163,7 @@
 				setTimeout(dropOrbsIteration, 200);
 			}
 			else{
-				setTimeout(checkMatchesIteration, 250);
+				setTimeout(checkMatchesIteration, 300);
 			}
 		}
 
@@ -171,10 +171,11 @@
 			matches = findMatches(data);
 			displayMatches(matches);
 			data = clearMatches(matches, data);
-			dropOrbsIteration();
+			updateOrbs(data);
+			setTimeout(dropOrbsIteration, 300);
 		}
 
-		dropOrbsIteration(data);
+		setTimeout(dropOrbsIteration, 200);
 
 	}
 

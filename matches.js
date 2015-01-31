@@ -67,9 +67,13 @@ function matchColors(colors){
 		for(var j = 0; j < config.totalCols; j++){
 			var thisColor = colors[i][j];
 			// horizontal match, only if there's room
-			// TODO fix this to remove hardcoding of minMatchSize = 3
+
+			var colorsMatch = d3.range(config.minMatchSize).map(function(num){
+				return colors[i].length > j+num && colors[i][j+num] === thisColor;
+			})
+
 			if(j < config.totalCols - config.minMatchSize + 1
-				&& thisColor === colors[i][j+1] && thisColor === colors[i][j+2]){
+				&& colorsMatch.indexOf(false) === -1){
 
 				for(var k = j+config.minMatchSize; k < config.totalCols && thisColor === colors[i][k]; k++){
 					//nop
@@ -79,8 +83,12 @@ function matchColors(colors){
 			}
 
 			// vertical match, only if there's room
+			colorsMatch = d3.range(config.minMatchSize).map(function(num){
+				return colors.length > i+num && colors[i + num][j] === thisColor;
+			})
+
 			if(i < config.totalRows - config.minMatchSize + 1
-				&& thisColor === colors[i+1][j] && thisColor === colors[i+2][j]){
+				&& colorsMatch.indexOf(false) === -1){
 
 				for(k = i+config.minMatchSize; k < config.totalRows && thisColor === colors[k][j]; k++){
 					// nop
