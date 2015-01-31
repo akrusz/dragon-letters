@@ -65,8 +65,6 @@
 			})
 			.style('opacity', 1);
 
-
-
 	}
 
 	function updateOrbs(data){
@@ -87,8 +85,9 @@
 
 		orbSelection.exit()
 			.transition()
-			.duration(200)
+			.duration(300)
 			.style('opacity', 0)
+			.style('height', '100px')
 			.remove();
 	}
 
@@ -175,7 +174,7 @@
 			setTimeout(dropOrbsIteration, 300);
 		}
 
-		setTimeout(dropOrbsIteration, 200);
+		setTimeout(dropOrbsIteration, 100);
 
 	}
 
