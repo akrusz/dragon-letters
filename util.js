@@ -84,3 +84,22 @@ function sortPosition(data) {
 			return d3.ascending(a.position, b.position)
 		});
 }
+
+function colorName(letter){
+	switch(letter.toUpperCase()){
+		case 'R':
+			return 'Red';
+		case 'G':
+			return 'Green';
+		case 'B':
+			return 'Blue';
+		case 'L':
+			return 'Light';
+		case 'D':
+			return 'Dark';
+		case 'W':
+			return 'White';
+		default:
+			return '';
+	}
+}

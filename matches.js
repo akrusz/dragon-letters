@@ -48,17 +48,6 @@ function matchWords(letters){
 	return wordMatches;
 }
 
-
-
-function displayMatches(matches){
-	var words = matches.wordMatches.map(function(match){return match.value;});
-	for(var i = 0; i < words.length; i++){
-		$wordResults.prepend('<div class="word-result">' + words[i]
-			+ ": " + scoreWord(words[i]) + '</div>');
-	}
-
-}
-
 function matchColors(colors){
 	// colors is a 2d array of the orb colors
 	var colorMatches = [];
@@ -128,11 +117,12 @@ function scoreLetter(letter){
 }
 
 function scoreMatches(matches){
-	var baseScores = matches.map(function(match){
+	// only word matches have a base score. all matches increase total score by 20% of base score.
+	var baseScores = matches.wordMatches.map(function(match){
 		return scoreWord(match.value);
 	});
 	var totalBaseScore = baseScores.reduce(function(a, b){
 		return a + b;
 	});
-	return totalBaseScore + 0.25 * totalBaseScore * (matches.length - 1);
+	return totalBaseScore * (1 + 0.20 * (matches.wordMatches.length + matches.colorMatches.length - 1));
 }
