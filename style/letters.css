@@ -2,6 +2,16 @@ body {
   background: #FFF5F0;
 }
 
+div.overlay {
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
+}
+
 div.game-container {
   background: #FFFFFF;
   width: 400px;

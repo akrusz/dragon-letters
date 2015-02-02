@@ -24,6 +24,10 @@
 	var $moveBar = $('div.move-bar');
 
 	var isAnimating = false;
+	var $overlay = $('div.overlay');
+	$overlay.click(function(event){
+		event.stopPropagation();
+	})
 
 	var orbSelection;
 	enterOrbs(initialData);
@@ -174,6 +178,7 @@
 				currentSwaps = 0;
 				updateMoveBar();
 				isAnimating = false;
+				$overlay.hide();
 				return;
 			}
 
@@ -197,6 +202,8 @@
 			totalMatches.wordMatches = totalMatches.wordMatches.concat(matches.wordMatches);
 
 			isAnimating = true;
+			$overlay.show();
+
 			displayMatches(matches);
 			data = clearMatches(matches, data);
 			updateOrbs(data);
