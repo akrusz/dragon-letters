@@ -253,8 +253,12 @@
 	}
 
 	function displayTotalMatches(matches){
-		$wordResults.prepend('<div class="result">Combo: '
-			+ scoreMatches(matches) + '</div>');
+		var score = scoreMatches(matches);
+
+		if(score > 0){
+			$wordResults.prepend('<div class="result">Combo: '
+				+ scoreMatches(matches) + '</div>');
+		}
 	}
 
 	function dropExistingOrbs(data){
