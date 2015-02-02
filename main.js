@@ -23,6 +23,8 @@
 	var $wordResults = $('div.word-results');
 	var $moveBar = $('div.move-bar');
 
+	var isAnimating = false;
+
 	var orbSelection;
 	enterOrbs(initialData);
 
@@ -97,6 +99,10 @@
 	var dragEnded = false;
 
 	function dragmove(d, i) {
+		if(isAnimating){
+			return;
+		}
+
 		if(currentSwaps >= config.maxSwaps){
 			// update the move time bar but do nothing else
 			updateMoveBar();
@@ -167,7 +173,7 @@
 				displayTotalMatches(totalMatches);
 				currentSwaps = 0;
 				updateMoveBar();
-
+				isAnimating = false;
 				return;
 			}
 
@@ -190,6 +196,7 @@
 			totalMatches.colorMatches = totalMatches.colorMatches.concat(matches.colorMatches);
 			totalMatches.wordMatches = totalMatches.wordMatches.concat(matches.wordMatches);
 
+			isAnimating = true;
 			displayMatches(matches);
 			data = clearMatches(matches, data);
 			updateOrbs(data);
