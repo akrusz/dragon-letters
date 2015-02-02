@@ -14,6 +14,7 @@
 		.map(function(pos){return randomOrb(pos, config)});
 
 	var drag = d3.behavior.drag()
+			.on('dragstart', dragstart)
 			.on("drag", dragmove)
 			.on('dragend', dragend);
 
@@ -24,6 +25,7 @@
 	var $moveBar = $('div.move-bar');
 
 	var isAnimating = false;
+	var isDragging = false;
 	var $overlay = $('div.overlay');
 	$overlay.click(function(event){
 		event.stopPropagation();
@@ -102,7 +104,11 @@
 	var currentSwaps = 0;
 	var dragEnded = false;
 
-	function dragmove(d, i) {
+	function dragstart(d, i){
+		isDragging = true;
+	}
+
+	function dragmove(d, i){
 		if(isAnimating){
 			return;
 		}
@@ -133,6 +139,7 @@
 
 		if(newPosition !== d.position){
 			currentSwaps += 1;
+			isDragging = true;
 			// update the move time bar
 			updateMoveBar();
 
@@ -151,12 +158,19 @@
 			thisOrbData.position = newPosition;
 			d3this.datum(thisOrbData);
 
+			if(currentSwaps === config.maxSwaps){
+				dragend(d, i, $this);
+				isDragging = false;
+			}
 		}
 	}
 
-	function dragend(d, i){
+	function dragend(d, i, orb){
+		if(!isDragging){
+			return;
+		}
 
-		var $this = $(this);
+		var $this = orb || $(this);
 		$this.removeClass('moving');
 
 		var x = parseInt($this.css('left'));
