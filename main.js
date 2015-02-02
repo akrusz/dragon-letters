@@ -166,7 +166,7 @@
 			if(data.length === config.totalRows*config.totalCols){
 				displayTotalMatches(totalMatches);
 				currentSwaps = 0;
-				$moveBar.width('100%');
+				updateMoveBar();
 
 				return;
 			}
