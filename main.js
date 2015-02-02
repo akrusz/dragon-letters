@@ -5,7 +5,8 @@
 		rowHeight : 50,
 		colWidth : 50,
 		minMatchSize: 4,
-		colors: 'RGBLDW'
+		colors: 'RGBLDW',
+		maxSwaps: 20
 	};
 
 	var initialData = d3.range(config.totalCols * config.totalRows)
@@ -19,7 +20,7 @@
 
 	var $results = $('div.game-results');
 	var $wordResults = $('div.word-results');
-
+	var $moveBar = $('div.move-bar');
 
 	var orbSelection;
 	enterOrbs(initialData);
@@ -90,8 +91,17 @@
 			.style('height', '80px')
 			.remove();
 	}
+	
+	var currentSwaps = 0;
+	var dragEnded = false;
 
 	function dragmove(d, i) {
+		if(currentSwaps >= config.maxSwaps){
+			// update the move time bar but do nothing else
+			updateMoveBar();
+			return;
+		}
+
 		var $this = $(this);
 		$this.addClass('moving');
 
@@ -111,6 +121,10 @@
 				.style('top', top + 'px');
 
 		if(newPosition !== d.position){
+			currentSwaps += 1;
+			// update the move time bar
+			updateMoveBar();
+
 			// select the displaced orb element (actually just one)
 			var displacedOrbs = orbSelection.filter(function(d,i){
 				return d.position === newPosition;
@@ -125,10 +139,12 @@
 			var thisOrbData = d3this.datum();
 			thisOrbData.position = newPosition;
 			d3this.datum(thisOrbData);
+
 		}
 	}
 
 	function dragend(d, i){
+
 		var $this = $(this);
 		$this.removeClass('moving');
 
@@ -148,6 +164,9 @@
 		var dropOrbsIteration = function(){
 			if(data.length === config.totalRows*config.totalCols){
 				displayTotalMatches(totalMatches);
+				currentSwaps = 0;
+				$moveBar.width('100%');
+
 				return;
 			}
 
@@ -177,12 +196,16 @@
 		}
 
 		checkMatchesIteration();
-
+		dragEnded = true;
 	}
 
 	function move(element, coords){
 		$(element).css('top', coords[1] + 'px')
 			.css('left', coords[0] + 'px');
+	}
+
+	function updateMoveBar(){
+		$moveBar.width(100*(1-currentSwaps/config.maxSwaps) + '%');
 	}
 
 	function clearMatches(matches, orbData){

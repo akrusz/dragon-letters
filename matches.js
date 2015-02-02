@@ -118,6 +118,10 @@ function scoreLetter(letter){
 
 function scoreMatches(matches){
 	// only word matches have a base score. all matches increase total score by 20% of base score.
+	if(matches.wordMatches.length == 0){
+		return 0;
+	}
+	
 	var baseScores = matches.wordMatches.map(function(match){
 		return scoreWord(match.value);
 	});
