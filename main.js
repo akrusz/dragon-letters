@@ -9,6 +9,7 @@
 		maxSwaps: 20
 	};
 
+	// TODO: ensure initial board has no matches
 	var initialData = d3.range(config.totalCols * config.totalRows)
 		.map(function(pos){return randomOrb(pos, config)});
 
@@ -253,9 +254,7 @@
 	}
 
 	function displayTotalMatches(matches){
-		var score = scoreMatches(matches);
-
-		if(score > 0){
+		if(currentSwaps > 0){
 			$wordResults.prepend('<div class="result">Combo: '
 				+ scoreMatches(matches) + '</div>');
 		}
