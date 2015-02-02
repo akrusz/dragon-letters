@@ -142,10 +142,12 @@
 		// check for matches
 		// TODO: break this out
 		var data = orbSelection.data();
+		var totalMatches = {colorMatches:[], wordMatches:[]};
 		var matches;
 
 		var dropOrbsIteration = function(){
 			if(data.length === config.totalRows*config.totalCols){
+				displayTotalMatches(totalMatches);
 				return;
 			}
 
@@ -165,6 +167,9 @@
 
 		var checkMatchesIteration = function(){
 			matches = findMatches(data);
+			totalMatches.colorMatches = totalMatches.colorMatches.concat(matches.colorMatches);
+			totalMatches.wordMatches = totalMatches.wordMatches.concat(matches.wordMatches);
+
 			displayMatches(matches);
 			data = clearMatches(matches, data);
 			updateOrbs(data);
@@ -214,18 +219,19 @@
 		});
 		
 		for(var i = 0; i < words.length; i++){
-			$wordResults.prepend('<div class="word-result">' + words[i]
+			$wordResults.prepend('<div class="result">' + words[i]
 				+ ": " + scoreWord(words[i]) + '</div>');
 		}
 
 		for(i = 0; i < colors.length; i++){
-			$wordResults.prepend('<div class="word-result">' + colors[i][0]
-				+ ": " + colors[i][1] + '</div>');
+			$wordResults.prepend('<div class="result ' + colors[i][0]
+				+ '">' + colors[i][0] + '</div>');
 		}
 	}
 
 	function displayTotalMatches(matches){
-
+		$wordResults.prepend('<div class="result">Combo: '
+			+ scoreMatches(matches) + '</div>');
 	}
 
 	function dropExistingOrbs(data){

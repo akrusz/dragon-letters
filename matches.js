@@ -124,5 +124,5 @@ function scoreMatches(matches){
 	var totalBaseScore = baseScores.reduce(function(a, b){
 		return a + b;
 	});
-	return totalBaseScore * (1 + 0.20 * (matches.wordMatches.length + matches.colorMatches.length - 1));
+	return Math.round(totalBaseScore * (1 + 0.20 * (matches.wordMatches.length + matches.colorMatches.length - 1)));
 }

@@ -34,11 +34,14 @@ div.word-results {
   overflow: auto;
 }
 
-div.word-result {
+div.result {
   font-family: sans-serif;
   font-size: 20px;
   text-align: center;
-  margin: 7px 0;
+  margin: 3px auto;
+  padding: 4px 5px;
+  border-radius: 8px;
+  width: 50%;
 }
 
 div.orb {
@@ -75,7 +78,7 @@ div.letter-points{
 }
 
 div.letter-points span {
-  
+
 }
 
 div.red {

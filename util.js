@@ -88,18 +88,18 @@ function sortPosition(data) {
 function colorName(letter){
 	switch(letter.toUpperCase()){
 		case 'R':
-			return 'Red';
+			return 'red';
 		case 'G':
-			return 'Green';
+			return 'green';
 		case 'B':
-			return 'Blue';
+			return 'blue';
 		case 'L':
-			return 'Light';
+			return 'light';
 		case 'D':
-			return 'Dark';
+			return 'dark';
 		case 'W':
-			return 'White';
+			return 'white';
 		default:
-			return '';
+			return null;
 	}
 }
