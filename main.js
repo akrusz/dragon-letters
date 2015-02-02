@@ -205,8 +205,13 @@
 			.css('left', coords[0] + 'px');
 	}
 
+	var moveBarInterpolator = d3.interpolate('#DD4422', '#44DD88');
+
 	function updateMoveBar(){
-		$moveBar.width(100*(1-currentSwaps/config.maxSwaps) + '%');
+		var moveRemaining = 1-currentSwaps/config.maxSwaps;
+		$moveBar.width(100*moveRemaining + '%');
+
+		$moveBar.css('background-color', moveBarInterpolator(moveRemaining));
 	}
 
 	function clearMatches(matches, orbData){
