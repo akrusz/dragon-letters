@@ -91,6 +91,32 @@ function matchColors(colors){
 	return colorMatches;
 }
 
+function clearMatches(matches, orbData){
+	var allMatches = matches.colorMatches.concat(matches.wordMatches);
+
+	var orbsToRemove = [];
+
+	for(var matchNum = 0; matchNum <  allMatches.length; matchNum++){
+		var thisMatch = allMatches[matchNum];
+		var moreToAdd = thisMatch.orbs;
+		var row = thisMatch.row;
+		var col = thisMatch.col;
+		for(var moreToAdd = thisMatch.orbs; moreToAdd > 0; moreToAdd--){
+			orbsToRemove.push(row * config.totalCols + col);
+			if(thisMatch.direction === 'horizontal'){
+				col++;
+			}
+			else{
+				row++;
+			}
+		}
+	}
+
+	return orbData.filter(function(d){
+		return orbsToRemove.indexOf(d.position) === -1;
+	});
+}
+
 function newMatch(row, col, direction, orbs, value){
 	// value should contain the word or the color letter.
 	// no ambiguity since word matches are at least 3 characters
@@ -121,7 +147,7 @@ function scoreMatches(matches){
 	if(matches.wordMatches.length == 0){
 		return 0;
 	}
-	
+
 	var baseScores = matches.wordMatches.map(function(match){
 		return scoreWord(match.value);
 	});

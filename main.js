@@ -10,8 +10,7 @@
 	};
 
 	// TODO: ensure initial board has no matches
-	var initialData = d3.range(config.totalCols * config.totalRows)
-		.map(function(pos){return randomOrb(pos, config)});
+	var initialData = generateBoardNoMatches();
 
 	var drag = d3.behavior.drag()
 			.on('dragstart', dragstart)
@@ -101,6 +100,23 @@
 			.remove();
 	}
 	
+	function generateBoardNoMatches(){
+		var boardData = d3.range(config.totalCols * config.totalRows)
+			.map(function(pos){return randomOrb(pos, config)});
+
+		var matches = findMatches(boardData);
+		boardData = clearMatches(matches, boardData);
+		while(boardData.length < config.totalCols * config.totalRows){
+			while(boardData.length < config.totalCols * config.totalRows){
+				boardData = dropExistingOrbs(boardData);
+				boardData = dropNewOrbs(boardData);
+			}
+			matches = findMatches(boardData);
+			boardData = clearMatches(matches, boardData);
+		}
+		return boardData;
+	}
+
 	var currentSwaps = 0;
 	var dragEnded = false;
 
@@ -170,6 +186,8 @@
 			return;
 		}
 
+		// need to have an element to operate on.
+		// orb may be null if user still dragging from prev turn
 		var $this = orb || $(this);
 		$this.removeClass('moving');
 
@@ -241,33 +259,6 @@
 
 		$moveBar.css('background-color', moveBarInterpolator(moveRemaining));
 	}
-
-	function clearMatches(matches, orbData){
-		var allMatches = matches.colorMatches.concat(matches.wordMatches);
-
-		var orbsToRemove = [];
-
-		for(var matchNum = 0; matchNum <  allMatches.length; matchNum++){
-			var thisMatch = allMatches[matchNum];
-			var moreToAdd = thisMatch.orbs;
-			var row = thisMatch.row;
-			var col = thisMatch.col;
-			for(var moreToAdd = thisMatch.orbs; moreToAdd > 0; moreToAdd--){
-				orbsToRemove.push(row * config.totalCols + col);
-				if(thisMatch.direction === 'horizontal'){
-					col++;
-				}
-				else{
-					row++;
-				}
-			}
-		}
-
-		return orbData.filter(function(d){
-			return orbsToRemove.indexOf(d.position) === -1;
-		});
-	}
-
 
 	function displayMatches(matches){
 		var words = matches.wordMatches.map(function(match){return match.value;});
