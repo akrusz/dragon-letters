@@ -251,7 +251,8 @@ function displayMatches(matches){
 
 function displayTotalMatches(matches){
 	if(currentSwaps > 0){
-		$wordResults.prepend('<div class="result">Combo: '
+		$wordResults.prepend('<div class="result">' + 
+			(matches.colorMatches.length + matches.wordMatches.length) + ' combo: '
 			+ scoreMatches(matches) + '</div>');
 	}
 }
