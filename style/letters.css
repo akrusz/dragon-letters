@@ -92,6 +92,7 @@ div.orb {
 div.moving {
   z-index: 100;
   box-shadow: 3px 3px 8px #444;
+  cursor: none;
 }
 
 div.letter {
