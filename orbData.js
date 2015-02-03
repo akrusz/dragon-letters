@@ -1,3 +1,20 @@
+function generateBoardNoMatches(){
+	var boardData = d3.range(config.totalCols * config.totalRows)
+		.map(function(pos){return randomOrb(pos, config)});
+
+	var matches = findMatches(boardData);
+	boardData = clearMatches(matches, boardData);
+	while(boardData.length < config.totalCols * config.totalRows){
+		while(boardData.length < config.totalCols * config.totalRows){
+			boardData = dropExistingOrbs(boardData);
+			boardData = dropNewOrbs(boardData);
+		}
+		matches = findMatches(boardData);
+		boardData = clearMatches(matches, boardData);
+	}
+	return boardData;
+}
+
 function findMatches(data){
 	data = sortPosition(data);
 
@@ -155,4 +172,53 @@ function scoreMatches(matches){
 		return a + b;
 	});
 	return Math.round(totalBaseScore * (1 + 0.20 * (matches.wordMatches.length + matches.colorMatches.length - 1)));
+}
+
+function dropExistingOrbs(data){
+	data = sortPosition(data);
+
+	var positionsPresent = [];
+	for(var i = 0; i < data.length; i++){
+		positionsPresent[data[i].position] = true;
+	}
+
+	// drop existing orbs
+	for(i = config.totalCols*(config.totalRows - 1) - 1; i >=0; i--){
+		if(positionsPresent[i] && !positionsPresent[i + config.totalCols]){
+			var fallingOrbIndex;
+			var fallingOrbData = data.filter(function(d, index){
+
+				if(d.position === i){
+					fallingOrbIndex = index;
+					return true;
+				}
+				return false;
+			});
+
+			fallingOrbData[0].position += config.totalCols;
+
+			positionsPresent[i] = false;
+			positionsPresent[i + config.totalCols] = true;
+		}
+	}
+
+	return data;
+}
+
+function dropNewOrbs(data){
+	data = sortPosition(data);
+	var positionsPresent = [];
+	for(var i = 0; i < data.length; i++){
+		positionsPresent[data[i].position] = true;
+	}
+
+	// drop new row of orbs
+	for(i = 0; i < config.totalCols; i++){
+		if(!positionsPresent[i]){
+			data.push(randomOrb(i, config));
+		}
+
+	}
+
+	return data;
 }
