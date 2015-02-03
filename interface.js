@@ -15,6 +15,11 @@ var $overlay = $('div.overlay');
 $overlay.click(function(event){
 	event.stopPropagation();
 })
+var $loading = d3.select('div.loading-message');
+$loading.transition(200)
+		.style('top', '200px')
+		.style('opacity', 0);
+
 var orbSelection;
 
 function enterOrbs(data){
