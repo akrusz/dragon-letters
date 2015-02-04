@@ -15,8 +15,8 @@ var $overlay = $('div.overlay');
 $overlay.click(function(event){
 	event.stopPropagation();
 })
-var $loading = d3.select('div.loading-message');
-$loading.transition(200)
+var loadingMessage = d3.select('div.loading-message');
+loadingMessage.transition()
 		.style('top', '200px')
 		.style('opacity', 0);
 
@@ -140,14 +140,14 @@ function dragmove(d, i){
 		displacedOrbData.position = d.position;
 		displacedOrbs.datum(displacedOrbData);
 
-		move(displacedOrbs[0], orbNumberCoords(d.position, config));
+		move(displacedOrbs, orbNumberCoords(d.position, config));
 
 		var thisOrbData = d3this.datum();
 		thisOrbData.position = newPosition;
 		d3this.datum(thisOrbData);
 
 		if(currentSwaps === config.maxSwaps){
-			dragend(d, i, $this);
+			dragend(d, i, this);
 			isDragging = false;
 		}
 	}
@@ -160,7 +160,9 @@ function dragend(d, i, orb){
 
 	// need to have an element to operate on.
 	// orb may be null if user still dragging from prev turn
-	var $this = orb || $(this);
+	var thisElement = orb || this;
+	var $this = $(thisElement);
+	var d3this = d3.select(thisElement);
 	$this.removeClass('moving');
 
 	var x = parseInt($this.css('left'));
@@ -168,7 +170,7 @@ function dragend(d, i, orb){
 	var nearestRowY = Math.round(y / config.rowHeight) * config.rowHeight;
 	var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
 
-	move(this, [nearestColX, nearestRowY]);
+	move(d3this, [nearestColX, nearestRowY]);
 
 	// check for matches
 	// TODO: break this out
@@ -218,9 +220,12 @@ function dragend(d, i, orb){
 	dragEnded = true;
 }
 
-function move(element, coords){
-	$(element).css('top', coords[1] + 'px')
-		.css('left', coords[0] + 'px');
+function move(d3element, coords){
+	d3element
+		.transition()
+		.duration(100)
+		.style('left', coords[0] + 'px')
+		.style('top', coords[1] + 'px');
 }
 
 var moveBarInterpolator = d3.interpolate('#DD4422', '#44DD88');
