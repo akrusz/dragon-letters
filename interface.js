@@ -7,6 +7,7 @@ var board = d3.select("div.game-board");
 
 var $results = $('div.game-results');
 var $wordResults = $('div.word-results');
+var d3MoveBar = d3.select('div.move-bar');
 var $moveBar = $('div.move-bar');
 
 var isAnimating = false;
@@ -228,13 +229,15 @@ function move(d3element, coords){
 		.style('top', coords[1] + 'px');
 }
 
-var moveBarInterpolator = d3.interpolate('#DD4422', '#44DD88');
+var redGreenInterpolator = d3.interpolate('#DD4422', '#44DD88');
 
 function updateMoveBar(){
 	var moveRemaining = 1-currentSwaps/config.maxSwaps;
-	$moveBar.width(100*moveRemaining + '%');
-
-	$moveBar.css('background-color', moveBarInterpolator(moveRemaining));
+	d3MoveBar
+		.transition()
+		.duration(100)
+		.style('background-color', redGreenInterpolator(moveRemaining))
+		.style('width', moveRemaining * $moveBar.parent().width() + 'px');
 }
 
 function displayMatches(matches){
