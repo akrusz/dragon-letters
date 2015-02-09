@@ -193,7 +193,7 @@ function dragend(d, i, orb){
 		updateOrbs(data);
 		data = dropNewOrbs(data);
 		enterOrbs(data);
-		
+
 		// if board's not full yet
 		if(data.length < config.totalRows*config.totalCols){
 			setTimeout(dropOrbsIteration, 200);
@@ -245,7 +245,7 @@ function displayMatches(matches){
 	var colors = matches.colorMatches.map(function(match){
 		return [colorName(match.value), match.orbs]
 	});
-	
+
 	for(var i = 0; i < words.length; i++){
 		$wordResults.prepend('<div class="result">' + words[i]
 			+ ": " + scoreWord(words[i]) + '</div>');
@@ -259,7 +259,7 @@ function displayMatches(matches){
 
 function displayTotalMatches(matches){
 	if(currentSwaps > 0){
-		$wordResults.prepend('<div class="result">' + 
+		$wordResults.prepend('<div class="result">' +
 			(matches.colorMatches.length + matches.wordMatches.length) + ' combo: '
 			+ scoreMatches(matches) + '</div>');
 	}
