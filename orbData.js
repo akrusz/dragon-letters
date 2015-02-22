@@ -82,11 +82,18 @@ function matchColors(colors){
 				&& colorsMatch.indexOf(false) === -1){
 
 				for(var k = j+config.minMatchSize; k < config.totalCols && thisColor === colors[i][k]; k++){
-					//nop
+					// nop
 				}
 
 				colorMatches.push(newMatch(i, j, 'horizontal', k - j, thisColor));
+				j = k;
 			}
+		}
+	}
+
+	for(j = 0; j < config.totalCols; j++){
+		for(i = 0; i < config.totalRows; i++){
+			thisColor = colors[i][j];
 
 			// vertical match, only if there's room
 			colorsMatch = d3.range(config.minMatchSize).map(function(num){
@@ -101,6 +108,7 @@ function matchColors(colors){
 				}
 
 				colorMatches.push(newMatch(i, j, 'vertical', k - i, thisColor));
+				i = k;
 			}
 		}
 	}

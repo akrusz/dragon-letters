@@ -185,7 +185,7 @@ function dragend(d, i, orb){
 			currentSwaps = 0;
 			updateMoveBar();
 			isAnimating = false;
-			$overlay.hide();
+			$overlay.addClass('hidden');
 			return;
 		}
 
@@ -209,7 +209,7 @@ function dragend(d, i, orb){
 		totalMatches.wordMatches = totalMatches.wordMatches.concat(matches.wordMatches);
 
 		isAnimating = true;
-		$overlay.show();
+		$overlay.removeClass('hidden');
 
 		displayMatches(matches);
 		data = clearMatches(matches, data);

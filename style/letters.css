@@ -2,6 +2,10 @@ body {
   background: #FFF5F0;
 }
 
+.hidden {
+  display: none;
+}
+
 div.overlay {
   z-index: 1000;
   width: 100%;
