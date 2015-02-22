@@ -117,8 +117,8 @@ function dragmove(d, i){
 	// drag from center of orb
 	var left = x - $this.width()/2;
 	var top = y - $this.height()/2;
-	left = limitToBounds(left, 0, config.colWidth * config.totalCols);
-	top = limitToBounds(top, 0, config.rowHeight * config.totalRows);
+	left = limitToBounds(left, 0, config.colWidth * (config.totalCols - 1));
+	top = limitToBounds(top, 0, config.rowHeight * (config.totalRows - 1));
 
 	var newPosition = xyOrbNumber([x,y], config);
 

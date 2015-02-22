@@ -41,17 +41,18 @@ div.loading-message {
   top: 130px;
 }
 
-div.controls {
+div.move-bar-container {
   background: #FFFFFF;
   width: 400px;
-  height: 20px;
+  height: 10px;
   border-radius: 10px;
   border: 1px solid #666;
-  margin: 20px auto 0;
+  margin: 10px auto 0;
 }
 
 div.move-bar {
   border-radius: 9px;
+  height: 10px;
   background-color: #44DD88;
   width: 100%;
   height: 100%;
