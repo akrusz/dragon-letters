@@ -15,6 +15,14 @@ function generateBoardNoMatches(){
 	return boardData;
 }
 
+function generatePerturbedBoard(perturbation){
+	var boardData = generatePerfectBoard();
+}
+
+function generatePerfectBoard(){
+	
+}
+
 function findMatches(data){
 	data = sortPosition(data);
 
@@ -39,8 +47,8 @@ function matchWords(letters){
 		var thisRowLetters = letters[i].join('');
 		for(var j = 0; j < config.totalCols; j++){
 			// horizontal match, only if there's room
-			if(j <= config.totalCols - config.minMatchSize){
-				for(var k = config.totalCols - j; k >= config.minMatchSize; k--){
+			if(j <= config.totalCols - config.minWordMatchSize){
+				for(var k = config.totalCols - j; k >= config.minWordMatchSize; k--){
 					var word = thisRowLetters.substr(j, k);
 					if(Word_List.isInList(word)){
 						wordMatches.push(newMatch(i, j, 'horizontal', k, word));
@@ -51,8 +59,8 @@ function matchWords(letters){
 
 			// vertical match, only if there's room
 			var thisColLetters = letters.map(function(row){return row[j];}).join('');
-			if(i <= config.totalRows - config.minMatchSize){
-				for(k = config.totalRows - i; k >= config.minMatchSize; k--){
+			if(i <= config.totalRows - config.minWordMatchSize){
+				for(k = config.totalRows - i; k >= config.minWordMatchSize; k--){
 					word = thisColLetters.substr(i, k);
 					if(Word_List.isInList(word)){
 						wordMatches.push(newMatch(i, j, 'vertical', k, word));
@@ -74,14 +82,14 @@ function matchColors(colors){
 			var thisColor = colors[i][j];
 			// horizontal match, only if there's room
 
-			var colorsMatch = d3.range(config.minMatchSize).map(function(num){
+			var colorsMatch = d3.range(config.minColorMatchSize).map(function(num){
 				return colors[i].length > j+num && colors[i][j+num] === thisColor;
 			})
 
-			if(j < config.totalCols - config.minMatchSize + 1
+			if(j < config.totalCols - config.minColorMatchSize + 1
 				&& colorsMatch.indexOf(false) === -1){
 
-				for(var k = j+config.minMatchSize; k < config.totalCols && thisColor === colors[i][k]; k++){
+				for(var k = j+config.minColorMatchSize; k < config.totalCols && thisColor === colors[i][k]; k++){
 					// nop
 				}
 
@@ -96,14 +104,14 @@ function matchColors(colors){
 			thisColor = colors[i][j];
 
 			// vertical match, only if there's room
-			colorsMatch = d3.range(config.minMatchSize).map(function(num){
+			colorsMatch = d3.range(config.minColorMatchSize).map(function(num){
 				return colors.length > i+num && colors[i + num][j] === thisColor;
 			})
 
-			if(i < config.totalRows - config.minMatchSize + 1
+			if(i < config.totalRows - config.minColorMatchSize + 1
 				&& colorsMatch.indexOf(false) === -1){
 
-				for(k = i+config.minMatchSize; k < config.totalRows && thisColor === colors[k][j]; k++){
+				for(k = i+config.minColorMatchSize; k < config.totalRows && thisColor === colors[k][j]; k++){
 					// nop
 				}
 

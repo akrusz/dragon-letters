@@ -1,7 +1,7 @@
 var drag = d3.behavior.drag()
 		.on('dragstart', dragstart)
 		.on("drag", dragmove)
-		.on('dragend', dragend);
+		.on('dragend', endMove);
 
 var board = d3.select("div.game-board");
 
@@ -148,13 +148,13 @@ function dragmove(d, i){
 		d3this.datum(thisOrbData);
 
 		if(currentSwaps === config.maxSwaps){
-			dragend(d, i, this);
+			endMove(d, i, this);
 			isDragging = false;
 		}
 	}
 }
 
-function dragend(d, i, orb){
+function endMove(d, i, orb){
 	if(!isDragging){
 		return;
 	}

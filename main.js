@@ -3,7 +3,8 @@ var config = {
 	totalCols : 7,
 	rowHeight : 50,
 	colWidth : 50,
-	minMatchSize: 4,
+	minColorMatchSize: 4,
+	minWordMatchSize: 4,
 	colors: 'RGBLDW',
 	movement: 'swap',
 	maxSwaps: 20

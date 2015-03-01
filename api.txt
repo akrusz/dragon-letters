@@ -1,31 +1,43 @@
 (Planned) options for config object
 
 orbGeneration: {
-	type: random, randomNoMatches, disturbedWords
-
+	type: random, randomNoMatches, perturbedWords
+		perturbedWords generates a full board of matches and then makes a random move
+		of specified length to scramble.
+	perturbance: number length of perturbation, only if type = perturbedWords
+	colors: color initials of orbs to be generated. out of RGBLDW
+	letterFrequency: object with letters as keys and relative frequencies as values
 }
 
 matching: {
-		
 	minColorMatchSize: the minimum number of orbs in a color match
-	minWordMatchSize: the minimum number of orbs in a word match 
+	minWordMatchSize: the minimum number of orbs in a word match
+	dictionary: wordBank or something simpler
 }
 
 board: {
-			
-	colors: color initials of orbs to be generated. out of RGBLDW
-	totalRows: total rows in board
-	totalCols: total columns in board
-	rowHeight: height of row in pixels
-	colWidth: width of column in pixels
-
+	rows: total rows in board
+	cols: total columns in board
+	width: width of board in pixels
+	height: height of board in pixels
 }
 
 movement: {
-	type: swap or time
+	type: swaps or time
 	moveLimit: single, multi, or hybrid. can the player make more than one drag per turn?
 	           hybrid allows this but incurs a greater cost for the first move of a drag.
-		
 	maxSwaps: 20
 	maxTime: 5 (seconds)
 }
+
+enemies: [
+	[
+		enemy1, enemy2, ...
+	],
+	,
+	[] ...
+]
+
+winCondition: function
+
+loseCondition: function
