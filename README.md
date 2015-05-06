@@ -3,6 +3,8 @@ can YOU match all the letters and get the legendary combo?
 
 codes: Alex Krusz with help from Hui Liu
 
+License: Creative Commons Attribution-NonCommercial CC BY-NC
+
     UK Advanced Cryptics Dictionary Licensing Information:
 
     Copyright © J Ross Beresford 1993-1999. All Rights Reserved. The following
@@ -10,3 +12,4 @@ codes: Alex Krusz with help from Hui Liu
     Cryptics Dictionary is used in a software package or redistributed in any form,
     the copyright notice must be prominently displayed and the text of this document
     must be included verbatim.
+

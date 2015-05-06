@@ -38,6 +38,6 @@ enemies: [
 	[] ...
 ]
 
-winCondition: function
+win: function, examines game state and returns true if player has won
 
-loseCondition: function
+lose: function, examines game state and returns true if player has lost

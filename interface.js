@@ -15,7 +15,7 @@ var isDragging = false;
 var $overlay = $('div.overlay');
 $overlay.click(function(event){
 	event.stopPropagation();
-})
+});
 var loadingMessage = d3.select('div.loading-message');
 loadingMessage.transition()
 		.style('top', '200px')
@@ -86,7 +86,6 @@ function updateOrbs(data){
 		.transition()
 		.duration(300)
 		.style('opacity', 0)
-		.style('height', '80px')
 		.remove();
 }
 
@@ -141,7 +140,7 @@ function dragmove(d, i){
 		displacedOrbData.position = d.position;
 		displacedOrbs.datum(displacedOrbData);
 
-		move(displacedOrbs, orbNumberCoords(d.position, config));
+		slide(displacedOrbs, orbNumberCoords(d.position, config));
 
 		var thisOrbData = d3this.datum();
 		thisOrbData.position = newPosition;
@@ -171,7 +170,7 @@ function endMove(d, i, orb){
 	var nearestRowY = Math.round(y / config.rowHeight) * config.rowHeight;
 	var nearestColX = Math.round(x / config.colWidth) * config.colWidth;
 
-	move(d3this, [nearestColX, nearestRowY]);
+	slide(d3this, [nearestColX, nearestRowY]);
 
 	// check for matches
 	// TODO: break this out
@@ -221,7 +220,7 @@ function endMove(d, i, orb){
 	dragEnded = true;
 }
 
-function move(d3element, coords){
+function slide(d3element, coords){
 	d3element
 		.transition()
 		.duration(100)
@@ -247,7 +246,7 @@ function displayMatches(matches){
 	});
 
 	for(var i = 0; i < words.length; i++){
-		$wordResults.prepend('<div class="result">' + words[i]
+		$wordResults.prepend('<div class="result word-result">' + words[i]
 			+ ": " + scoreWord(words[i]) + '</div>');
 	}
 
