@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 public class BoardManager : MonoBehaviour {
 	public static BoardManager instance;
@@ -42,12 +41,12 @@ public class BoardManager : MonoBehaviour {
 				possibleLetters.Remove(previousLeft[y]);
 				possibleLetters.Remove(previousBelow);
 
-                var newSprite = possibleLetters[(int)Math.Floor((double)UnityEngine.Random.Range(0, possibleLetters.Count))];
+                Sprite newSprite = possibleLetters[Random.Range(0, possibleLetters.Count)].Sprite;
 
 
-                newTile.GetComponent<SpriteRenderer>().sprite = newSprite.Sprite;
-				previousLeft[y] = newSprite;
-				previousBelow = newSprite;
+                newTile.GetComponent<SpriteRenderer>().sprite = newSprite;
+				previousLeft[y].Sprite = newSprite;
+				previousBelow.Sprite = newSprite;
 			}
         }
     }
@@ -97,7 +96,7 @@ public class BoardManager : MonoBehaviour {
 		List<LetterTile> possibleLetters = new List<LetterTile>();
 		possibleLetters.AddRange(letters);
 
-        Sprite newSprite = possibleLetters[(int) Math.Floor((double) UnityEngine.Random.Range(0, possibleLetters.Count))].Sprite;
+        Sprite newSprite = possibleLetters[Random.Range(0, possibleLetters.Count)].Sprite;
         return newSprite;
 	}
 
