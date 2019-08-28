@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class BoardManager : MonoBehaviour {
 	public static BoardManager instance;
-    public Dictionary<Sprite, int> letters = new Dictionary<Sprite, int>();
+    public List<LetterTile> letters = new List<LetterTile>();
 	public GameObject tile;
 	public int xSize, ySize;
 
@@ -25,8 +27,8 @@ public class BoardManager : MonoBehaviour {
         float startX = transform.position.x;
 		float startY = transform.position.y;
 
-		Sprite[] previousLeft = new Sprite[ySize]; // Add this line
-		Sprite previousBelow = null; // Add this line
+		LetterTile[] previousLeft = new LetterTile[ySize]; // Add this line
+		LetterTile previousBelow = null; // Add this line
 
 		for (int x = 0; x < xSize; x++) {
 			for (int y = 0; y < ySize; y++) {
@@ -34,20 +36,16 @@ public class BoardManager : MonoBehaviour {
 				tiles[x, y] = newTile;
 				newTile.transform.parent = transform; // Add this line
 
-				var possibleLetters = new Dictionary<Sprite, int>();
-                Sprite newSprite = null;
-                foreach (var ch in letters)
-                {
-				    possibleLetters[ch.Key] = ch.Value;
-                    newSprite = ch.Key;
-                }
+                var possibleLetters = new List<LetterTile>();
+                possibleLetters = letters.ToList();
 
 				possibleLetters.Remove(previousLeft[y]);
 				possibleLetters.Remove(previousBelow);
 
+                var newSprite = possibleLetters[(int)Math.Floor((double)UnityEngine.Random.Range(0, possibleLetters.Count))];
 
-                
-				newTile.GetComponent<SpriteRenderer>().sprite = newSprite;
+
+                newTile.GetComponent<SpriteRenderer>().sprite = newSprite.Sprite;
 				previousLeft[y] = newSprite;
 				previousBelow = newSprite;
 			}
@@ -71,7 +69,7 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
-	private IEnumerator ShiftTilesDown(int x, int yStart, float shiftDelay = 1.03f) {
+	private IEnumerator ShiftTilesDown(int x, int yStart, float shiftDelay = .03f) {
 		IsShifting = true;
 		List<SpriteRenderer> renders = new List<SpriteRenderer>();
 		int nullCount = 0;
@@ -96,25 +94,10 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	private Sprite GetNewSprite(int x, int y) {
-		List<Sprite> possibleCharacters = new List<Sprite>();
-		possibleCharacters.AddRange(letters);
+		List<LetterTile> possibleLetters = new List<LetterTile>();
+		possibleLetters.AddRange(letters);
 
-		if (x > 0) {
-			possibleCharacters.Remove(tiles[x - 1, y].GetComponent<SpriteRenderer>().sprite);
-		}
-		if (x < xSize - 1) {
-			possibleCharacters.Remove(tiles[x + 1, y].GetComponent<SpriteRenderer>().sprite);
-		}
-		if (y > 0) {
-			possibleCharacters.Remove(tiles[x, y - 1].GetComponent<SpriteRenderer>().sprite);
-		}
-
-
-        Sprite newSprite = null;
-        foreach (var ch in letters)
-        {
-            newSprite = ch.Key;
-        }
+        Sprite newSprite = possibleLetters[(int) Math.Floor((double) UnityEngine.Random.Range(0, possibleLetters.Count))].Sprite;
         return newSprite;
 	}
 

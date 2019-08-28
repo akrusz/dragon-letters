@@ -68,6 +68,7 @@
     <Compile Include="Assets\Match 3 Starter\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Match 3 Starter\Scripts\Managers\GUIManager.cs" />
     <Compile Include="Assets\Match 3 Starter\Scripts\Managers\SFXManager.cs" />
+    <Compile Include="Assets\Match 3 Starter\Scripts\Models\LetterTile.cs" />
     <None Include="Assets\Match 3 Starter\Audio\Music\Attribution.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Unity/dragon-letters/Unity/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
