@@ -20,33 +20,29 @@ public class BoardManager : MonoBehaviour {
         CreateBoard(offset.x, offset.y);
     }
 
-	private void CreateBoard (float xOffset, float yOffset) {
+	private void CreateBoard (float xOffset, float yOffset)
+    {
 		tiles = new GameObject[xSize, ySize];
 
         float startX = transform.position.x;
 		float startY = transform.position.y;
 
-		LetterTile[] previousLeft = new LetterTile[ySize]; // Add this line
-		LetterTile previousBelow = null; // Add this line
-
-		for (int x = 0; x < xSize; x++) {
-			for (int y = 0; y < ySize; y++) {
-				GameObject newTile = Instantiate(tile, new Vector3(startX + (xOffset * x), startY + (yOffset * y), 0), tile.transform.rotation);
+        Debug.Log("start");
+		for (int x = 0; x < xSize; x++)
+        {
+			for (int y = 0; y < ySize; y++)
+            {
+                Debug.Log(x + " " + y);
+                GameObject newTile = Instantiate(tile, new Vector3(startX + (xOffset * x), startY + (yOffset * y), 0), tile.transform.rotation);
 				tiles[x, y] = newTile;
-				newTile.transform.parent = transform; // Add this line
+				newTile.transform.parent = transform;
 
                 var possibleLetters = new List<LetterTile>();
                 possibleLetters = letters.ToList();
 
-				possibleLetters.Remove(previousLeft[y]);
-				possibleLetters.Remove(previousBelow);
+                LetterTile newLetterTile = possibleLetters[Random.Range(0, possibleLetters.Count)];
 
-                Sprite newSprite = possibleLetters[Random.Range(0, possibleLetters.Count)].Sprite;
-
-
-                newTile.GetComponent<SpriteRenderer>().sprite = newSprite;
-				previousLeft[y].Sprite = newSprite;
-				previousBelow.Sprite = newSprite;
+                newTile.GetComponent<SpriteRenderer>().sprite = newLetterTile.Sprite;
 			}
         }
     }
@@ -86,18 +82,17 @@ public class BoardManager : MonoBehaviour {
 			yield return new WaitForSeconds(shiftDelay);
 			for (int k = 0; k < renders.Count - 1; k++) {
 				renders[k].sprite = renders[k + 1].sprite;
-				renders[k + 1].sprite = GetNewSprite(x, ySize - 1);
+				renders[k + 1].sprite = GetNewLetterTile(x, ySize - 1).Sprite;
 			}
 		}
 		IsShifting = false;
 	}
 
-	private Sprite GetNewSprite(int x, int y) {
+	private LetterTile GetNewLetterTile(int x, int y) {
 		List<LetterTile> possibleLetters = new List<LetterTile>();
 		possibleLetters.AddRange(letters);
 
-        Sprite newSprite = possibleLetters[Random.Range(0, possibleLetters.Count)].Sprite;
-        return newSprite;
+        return possibleLetters[Random.Range(0, possibleLetters.Count)];
 	}
 
 }
