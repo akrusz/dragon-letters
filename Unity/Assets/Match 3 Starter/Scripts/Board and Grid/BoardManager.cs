@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class BoardManager : MonoBehaviour {
 	public static BoardManager instance;
-	public List<Sprite> characters = new List<Sprite>();
+    public Dictionary<Sprite, int> letters = new Dictionary<Sprite, int>();
 	public GameObject tile;
 	public int xSize, ySize;
 
@@ -34,13 +34,19 @@ public class BoardManager : MonoBehaviour {
 				tiles[x, y] = newTile;
 				newTile.transform.parent = transform; // Add this line
 
-				List<Sprite> possibleCharacters = new List<Sprite>();
-				possibleCharacters.AddRange(characters);
+				var possibleLetters = new Dictionary<Sprite, int>();
+                Sprite newSprite = null;
+                foreach (var ch in letters)
+                {
+				    possibleLetters[ch.Key] = ch.Value;
+                    newSprite = ch.Key;
+                }
 
-				possibleCharacters.Remove(previousLeft[y]);
-				possibleCharacters.Remove(previousBelow);
+				possibleLetters.Remove(previousLeft[y]);
+				possibleLetters.Remove(previousBelow);
 
-				Sprite newSprite = possibleCharacters[Random.Range(0, possibleCharacters.Count)];
+
+                
 				newTile.GetComponent<SpriteRenderer>().sprite = newSprite;
 				previousLeft[y] = newSprite;
 				previousBelow = newSprite;
@@ -91,7 +97,7 @@ public class BoardManager : MonoBehaviour {
 
 	private Sprite GetNewSprite(int x, int y) {
 		List<Sprite> possibleCharacters = new List<Sprite>();
-		possibleCharacters.AddRange(characters);
+		possibleCharacters.AddRange(letters);
 
 		if (x > 0) {
 			possibleCharacters.Remove(tiles[x - 1, y].GetComponent<SpriteRenderer>().sprite);
@@ -103,7 +109,13 @@ public class BoardManager : MonoBehaviour {
 			possibleCharacters.Remove(tiles[x, y - 1].GetComponent<SpriteRenderer>().sprite);
 		}
 
-		return possibleCharacters[Random.Range(0, possibleCharacters.Count)];
+
+        Sprite newSprite = null;
+        foreach (var ch in letters)
+        {
+            newSprite = ch.Key;
+        }
+        return newSprite;
 	}
 
 }
