@@ -7,7 +7,7 @@ public class BoardManager : MonoBehaviour {
 	public static BoardManager instance;
     public List<LetterTile> letters = new List<LetterTile>();
 	public GameObject tile;
-	public int xSize, ySize;
+	public int tileCountX, tileCountY;
 
 	private GameObject[,] tiles;
 
@@ -24,14 +24,14 @@ public class BoardManager : MonoBehaviour {
 
 	private void CreateBoard (float xOffset, float yOffset)
     {
-		tiles = new GameObject[xSize, ySize];
+		tiles = new GameObject[tileCountX, tileCountY];
 
         float startX = transform.position.x;
 		float startY = transform.position.y;
         
-		for (int x = 0; x < xSize; x++)
+		for (int x = 0; x < tileCountX; x++)
         {
-			for (int y = 0; y < ySize; y++)
+			for (int y = 0; y < tileCountY; y++)
             {
                 GameObject newTile = Instantiate(tile,
                     new Vector3(startX + (xOffset * x),
@@ -52,8 +52,8 @@ public class BoardManager : MonoBehaviour {
     }
 
 	public IEnumerator FindNullTiles() {
-		for (int x = 0; x < xSize; x++) {
-			for (int y = 0; y < ySize; y++) {
+		for (int x = 0; x < tileCountX; x++) {
+			for (int y = 0; y < tileCountY; y++) {
 				if (tiles[x, y].GetComponent<SpriteRenderer>().sprite == null) {
 					yield return StartCoroutine(ShiftTilesDown(x, y));
 					break;
@@ -61,8 +61,8 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 
-		for (int x = 0; x < xSize; x++) {
-			for (int y = 0; y < ySize; y++) {
+		for (int x = 0; x < tileCountX; x++) {
+			for (int y = 0; y < tileCountY; y++) {
 				tiles[x, y].GetComponent<Tile>().ClearAllMatches();
 			}
 		}
@@ -73,7 +73,7 @@ public class BoardManager : MonoBehaviour {
 		List<SpriteRenderer> renders = new List<SpriteRenderer>();
 		int nullCount = 0;
 
-		for (int y = yStart; y < ySize; y++) {
+		for (int y = yStart; y < tileCountY; y++) {
 			SpriteRenderer render = tiles[x, y].GetComponent<SpriteRenderer>();
 			if (render.sprite == null) {
 				nullCount++;
@@ -86,7 +86,7 @@ public class BoardManager : MonoBehaviour {
 			yield return new WaitForSeconds(shiftDelay);
 			for (int k = 0; k < renders.Count - 1; k++) {
 				renders[k].sprite = renders[k + 1].sprite;
-				renders[k + 1].sprite = GetNewLetterTile(x, ySize - 1).Sprite;
+				renders[k + 1].sprite = GetNewLetterTile(x, tileCountY - 1).Sprite;
 			}
 		}
 		IsShifting = false;
