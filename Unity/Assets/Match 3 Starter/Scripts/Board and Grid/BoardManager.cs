@@ -16,7 +16,9 @@ public class BoardManager : MonoBehaviour {
 	void Start () {
 		instance = GetComponent<BoardManager>();
 
+        tile.SetActive(true);
 		Vector2 offset = tile.GetComponent<SpriteRenderer>().bounds.size;
+        Debug.Log(offset);
         CreateBoard(offset.x, offset.y);
     }
 
@@ -26,14 +28,15 @@ public class BoardManager : MonoBehaviour {
 
         float startX = transform.position.x;
 		float startY = transform.position.y;
-
-        Debug.Log("start");
+        
 		for (int x = 0; x < xSize; x++)
         {
 			for (int y = 0; y < ySize; y++)
             {
-                Debug.Log(x + " " + y);
-                GameObject newTile = Instantiate(tile, new Vector3(startX + (xOffset * x), startY + (yOffset * y), 0), tile.transform.rotation);
+                GameObject newTile = Instantiate(tile,
+                    new Vector3(startX + (xOffset * x),
+                                startY + (yOffset * y), 0),
+                                tile.transform.rotation);
 				tiles[x, y] = newTile;
 				newTile.transform.parent = transform;
 
@@ -41,7 +44,8 @@ public class BoardManager : MonoBehaviour {
                 possibleLetters = letters.ToList();
 
                 LetterTile newLetterTile = possibleLetters[Random.Range(0, possibleLetters.Count)];
-
+                Debug.Log(newLetterTile.Sprite.name);
+                Debug.Log(newTile.transform.position);
                 newTile.GetComponent<SpriteRenderer>().sprite = newLetterTile.Sprite;
 			}
         }
