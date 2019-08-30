@@ -4,12 +4,12 @@ using UnityEngine;
 
 public static class SpellCheckerInstance
 {
-    private static readonly string filePath = "/Text/wordlist.txt";
-    private static HashSet<string> wordSet = new HashSet<string>();
+    private static readonly TextAsset wordList = (TextAsset)Resources.Load("wordlist", typeof(TextAsset));
+    private static HashSet<string> wordSet;
 
     static SpellCheckerInstance()
     {
-        ReadTextFile(filePath);
+        ReadTextFile(wordList);
     }
 
     public static bool Check(string word)
@@ -17,20 +17,8 @@ public static class SpellCheckerInstance
         return wordSet.Contains(word);
     }
 
-    private static void ReadTextFile(string filePath)
+    private static void ReadTextFile(TextAsset wordList)
     {
-        var absolutePath = Application.dataPath + filePath;
-        Debug.Log(absolutePath);
-        StreamReader inp_stm = new StreamReader(absolutePath);
-
-        while (!inp_stm.EndOfStream)
-        {
-            string line = inp_stm.ReadLine();
-            wordSet.Add(line);
-            Debug.Log(line);
-            // Do Something with the input. 
-        }
-
-        inp_stm.Close();
+        wordSet = new HashSet<string>(wordList.text.Split('\n'));
     }
 }

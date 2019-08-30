@@ -73,7 +73,7 @@
     <None Include="Assets\Match 3 Starter\Audio\Music\Attribution.txt" />
     <None Include="Assets\Packages\symspell.6.3.0\contentFiles\any\netstandard2.0\frequency_dictionary_en_82_765.txt" />
     <None Include="Assets\Packages\symspell.6.3.0\contentFiles\any\net461\frequency_dictionary_en_82_765.txt" />
-    <None Include="Assets\Text\wordlist.txt" />
+    <None Include="Assets\Resources\wordlist.txt" />
     <None Include="Assets\NuGet\LICENSE.txt" />
     <None Include="Assets\Packages\symspell.6.3.0\contentFiles\any\net47\frequency_dictionary_en_82_765.txt" />
     <Reference Include="Unity.Timeline.Editor">

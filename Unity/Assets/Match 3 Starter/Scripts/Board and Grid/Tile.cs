@@ -85,7 +85,7 @@ public class Tile : MonoBehaviour {
 	private List<GameObject> FindMatch(Vector2 castDir) {
 		List<GameObject> tilesInDirection = new List<GameObject>();
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir);
-        string tileLetter = render.sprite?.name.Split('_')[1];
+        string tileLetter = render.sprite?.name.Split('_')[1].ToLower();
 		while (hit.collider != null) {
 			tilesInDirection.Add(hit.collider.gameObject);
 			hit = Physics2D.Raycast(hit.collider.transform.position, castDir);
@@ -93,7 +93,7 @@ public class Tile : MonoBehaviour {
 
         var lettersInDirection = new List<string> { tileLetter };
         lettersInDirection.AddRange(tilesInDirection.Select(
-            mt => mt.GetComponent<SpriteRenderer>()?.sprite?.name.Split('_')[1]));
+            mt => mt.GetComponent<SpriteRenderer>()?.sprite?.name.Split('_')[1].ToLower()));
         for(var wordLen = tilesInDirection.Count; wordLen > 2; wordLen--)
         {
             string potentialWord = String.Join("", lettersInDirection.Take(wordLen).ToList());
