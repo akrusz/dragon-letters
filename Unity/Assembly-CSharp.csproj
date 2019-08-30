@@ -65,11 +65,17 @@
     <Compile Include="Assets\Match 3 Starter\Scripts\Board and Grid\BoardManager.cs" />
     <Compile Include="Assets\Match 3 Starter\Scripts\Board and Grid\Tile.cs" />
     <Compile Include="Assets\Match 3 Starter\Scripts\Effects\GUISizePingPong.cs" />
+    <Compile Include="Assets\Match 3 Starter\Scripts\Logic\SpellCheckerInstance.cs" />
     <Compile Include="Assets\Match 3 Starter\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Match 3 Starter\Scripts\Managers\GUIManager.cs" />
     <Compile Include="Assets\Match 3 Starter\Scripts\Managers\SFXManager.cs" />
     <Compile Include="Assets\Match 3 Starter\Scripts\Models\LetterTile.cs" />
     <None Include="Assets\Match 3 Starter\Audio\Music\Attribution.txt" />
+    <None Include="Assets\Packages\symspell.6.3.0\contentFiles\any\netstandard2.0\frequency_dictionary_en_82_765.txt" />
+    <None Include="Assets\Packages\symspell.6.3.0\contentFiles\any\net461\frequency_dictionary_en_82_765.txt" />
+    <None Include="Assets\Text\wordlist.txt" />
+    <None Include="Assets\NuGet\LICENSE.txt" />
+    <None Include="Assets\Packages\symspell.6.3.0\contentFiles\any\net47\frequency_dictionary_en_82_765.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Unity/dragon-letters/Unity/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class Tile : MonoBehaviour {
 	private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
@@ -82,13 +83,28 @@ public class Tile : MonoBehaviour {
 	}
 
 	private List<GameObject> FindMatch(Vector2 castDir) {
-		List<GameObject> matchingTiles = new List<GameObject>();
+		List<GameObject> tilesInDirection = new List<GameObject>();
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir);
-		while (hit.collider != null && hit.collider.GetComponent<SpriteRenderer>().sprite == render.sprite) {
-			matchingTiles.Add(hit.collider.gameObject);
+        string tileLetter = render.sprite?.name.Split('_')[1];
+		while (hit.collider != null) {
+			tilesInDirection.Add(hit.collider.gameObject);
 			hit = Physics2D.Raycast(hit.collider.transform.position, castDir);
 		}
-		return matchingTiles;
+
+        var lettersInDirection = new List<string> { tileLetter };
+        lettersInDirection.AddRange(tilesInDirection.Select(
+            mt => mt.GetComponent<SpriteRenderer>()?.sprite?.name.Split('_')[1]));
+        for(var wordLen = tilesInDirection.Count; wordLen > 2; wordLen--)
+        {
+            string potentialWord = String.Join("", lettersInDirection.Take(wordLen).ToList());
+            Debug.Log(potentialWord);
+            if (SpellCheckerInstance.Check(potentialWord))
+            {
+                Debug.Log("true");
+                return tilesInDirection.Take(wordLen - 1).ToList();
+            }
+        }
+		return new List<GameObject>();
 	}
 
 	private void ClearMatch(Vector2[] paths) {
@@ -106,9 +122,7 @@ public class Tile : MonoBehaviour {
 	public void ClearAllMatches() {
 		if (render.sprite == null)
 			return;
-
-		ClearMatch(new Vector2[2] { Vector2.left, Vector2.right });
-		ClearMatch(new Vector2[2] { Vector2.up, Vector2.down });
+		ClearMatch(new Vector2[2] { Vector2.right, Vector2.down });
 		if (matchFound) {
 			render.sprite = null;
 			matchFound = false;

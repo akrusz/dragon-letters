@@ -44,8 +44,6 @@ public class BoardManager : MonoBehaviour {
                 possibleLetters = letters.ToList();
 
                 LetterTile newLetterTile = possibleLetters[Random.Range(0, possibleLetters.Count)];
-                Debug.Log(newLetterTile.Sprite.name);
-                Debug.Log(newTile.transform.position);
                 newTile.GetComponent<SpriteRenderer>().sprite = newLetterTile.Sprite;
 			}
         }
