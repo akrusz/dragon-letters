@@ -94,13 +94,13 @@ public class Tile : MonoBehaviour {
         var lettersInDirection = new List<string> { tileLetter };
         lettersInDirection.AddRange(tilesInDirection.Select(
             mt => mt.GetComponent<SpriteRenderer>()?.sprite?.name.Split('_')[1].ToLower()));
-        for(var wordLen = tilesInDirection.Count; wordLen > 2; wordLen--)
+        for(var wordLen = tilesInDirection.Count + 1; wordLen > 3; wordLen--)
         {
             string potentialWord = String.Join("", lettersInDirection.Take(wordLen).ToList());
-            Debug.Log(potentialWord);
             if (SpellCheckerInstance.Check(potentialWord))
             {
-                Debug.Log("true");
+                // -1 since the starting tile isn't here
+                Debug.Log(potentialWord);
                 return tilesInDirection.Take(wordLen - 1).ToList();
             }
         }
