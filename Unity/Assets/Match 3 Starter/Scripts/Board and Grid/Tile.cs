@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using UnityEngine.EventSystems;
 
-public class Tile : MonoBehaviour {
+public class Tile : MonoBehaviour
+{
 	private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
 	private static Tile previousSelected = null;
 
@@ -12,7 +14,9 @@ public class Tile : MonoBehaviour {
 
 	private Vector2[] adjacentDirections = new Vector2[] { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
 
-	void Awake() {
+    private bool isPressed = false;
+
+    void Awake() {
 		render = GetComponent<SpriteRenderer>();
     }
 
@@ -29,32 +33,46 @@ public class Tile : MonoBehaviour {
 		previousSelected = null;
 	}
 
-	void OnMouseDown() {
+    void Update()
+    {
+        Pressed();
+    }
+
+    void OnMouseDown() {
 		// Not Selectable conditions
 		if (render.sprite == null || BoardManager.instance.IsShifting) {
 			return;
 		}
 
-		if (isSelected) { // Is it already selected?
+        isPressed = true;
+        if (isSelected) { // Is it already selected?
 			Deselect();
 		} else {
-			if (previousSelected == null) { // Is it the first tile selected?
-				Select();
-			} else {
-				if (GetAllAdjacentTiles().Contains(previousSelected.gameObject)) { // Is it an adjacent tile?
-					SwapSprite(previousSelected.render);
-					previousSelected.ClearAllMatches();
-					previousSelected.Deselect();
-					ClearAllMatches();
-				} else {
-					previousSelected.GetComponent<Tile>().Deselect();
-					Select();
-				}
-			}
+            Select();
 		}
-	}
+    }
 
-	public void SwapSprite(SpriteRenderer render2) {
+    void OnMouseUp()
+    {
+        isPressed = false;
+    }
+
+    void Pressed()
+    {
+        if (isPressed)
+        {
+            Vector2 MousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            Vector2 objPosition = Camera.main.ScreenToWorldPoint(MousePosition);
+            transform.position = objPosition;
+            render.color = new Color(1f, 1f, 1f, .7f);
+        }
+        else
+        {
+            render.color = new Color(1f, 1f, 1f, 1f);
+        }
+    }
+
+    public void SwapSprite(SpriteRenderer render2) {
 		if (render.sprite == render2.sprite) {
 			return;
 		}
@@ -132,4 +150,5 @@ public class Tile : MonoBehaviour {
 		}
 	}
 
+    
 }

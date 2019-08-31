@@ -18,7 +18,6 @@ public class BoardManager : MonoBehaviour {
 
         tile.SetActive(true);
 		Vector2 offset = tile.GetComponent<SpriteRenderer>().bounds.size;
-        Debug.Log(offset);
         CreateBoard(offset.x, offset.y);
     }
 
