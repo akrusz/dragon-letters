@@ -37,7 +37,8 @@ public class BoardManager : MonoBehaviour {
                                 startY + (yOffset * y), 0),
                                 tile.transform.rotation);
 				tiles[x, y] = newTile;
-				newTile.transform.parent = transform;
+                tiles[x, y].GetComponent<SpriteRenderer>().sortingOrder = 1;
+                newTile.transform.parent = transform;
 
                 var possibleLetters = new List<LetterTile>();
                 possibleLetters = letters.ToList();

@@ -4,13 +4,13 @@ using System.Linq;
 using System;
 using UnityEngine.EventSystems;
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
 {
-	private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
-	private static Tile previousSelected = null;
-
+	private static Color selectedColor = new Color(.8f, .8f, .3f, 1.0f);
+	private static Tile currentlySelectedTile = null;
+	private static Vector3 previouslyMovedTilePosition;
+    
 	private SpriteRenderer render;
-	private bool isSelected = false;
 
 	private Vector2[] adjacentDirections = new Vector2[] { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
 
@@ -21,21 +21,13 @@ public class Tile : MonoBehaviour
     }
 
 	private void Select() {
-		isSelected = true;
-		render.color = selectedColor;
-		previousSelected = gameObject.GetComponent<Tile>();
-		SFXManager.instance.PlaySFX(Clip.Select);
 	}
 
 	private void Deselect() {
-		isSelected = false;
-		render.color = Color.white;
-		previousSelected = null;
 	}
 
     void Update()
     {
-        Pressed();
     }
 
     void OnMouseDown() {
@@ -45,30 +37,47 @@ public class Tile : MonoBehaviour
 		}
 
         isPressed = true;
-        if (isSelected) { // Is it already selected?
-			Deselect();
-		} else {
-            Select();
-		}
+        Select();
     }
 
     void OnMouseUp()
     {
         isPressed = false;
+        Deselect();
     }
 
-    void Pressed()
+    public void OnBeginDrag(PointerEventData pointerEventData)
     {
-        if (isPressed)
+        currentlySelectedTile = gameObject.GetComponent<Tile>();
+        previouslyMovedTilePosition = currentlySelectedTile.transform.position;
+        render.color = new Color(1f, 1f, 1f, .7f);
+        render.sortingOrder = 1000;
+        SFXManager.instance.PlaySFX(Clip.Select);
+    }
+
+    public void OnDrag(PointerEventData pointerEventData)
+    {
+        Vector2 MousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        Vector2 objPosition = Camera.main.ScreenToWorldPoint(MousePosition);
+        transform.position = objPosition;
+    }
+
+    public void OnEndDrag(PointerEventData pointerEventData)
+    {
+        currentlySelectedTile = null;
+        render.color = new Color(1f, 1f, 1f, 1f);
+        render.sortingOrder = 1;
+    }
+
+    public void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        Debug.Log(transform.position);
+        if(!(currentlySelectedTile is null))
         {
-            Vector2 MousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            Vector2 objPosition = Camera.main.ScreenToWorldPoint(MousePosition);
-            transform.position = objPosition;
-            render.color = new Color(1f, 1f, 1f, .7f);
-        }
-        else
-        {
-            render.color = new Color(1f, 1f, 1f, 1f);
+            Debug.Log(currentlySelectedTile);
+            var currentPosition = gameObject.GetComponent<Tile>().transform.position;
+            transform.position = previouslyMovedTilePosition;
+            previouslyMovedTilePosition = currentPosition;
         }
     }
 
