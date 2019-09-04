@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
 {
 	private static Color selectedColor = new Color(.8f, .8f, .3f, 1.0f);
-	private static Tile currentlySelectedTile = null;
+	private static Tile currentlyDraggingTile = null;
 	private static Vector3 previouslyMovedTilePosition;
     
 	private SpriteRenderer render;
-
-	private Vector2[] adjacentDirections = new Vector2[] { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
-
-    private bool isPressed = false;
 
     void Awake() {
 		render = GetComponent<SpriteRenderer>();
@@ -35,80 +32,52 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		if (render.sprite == null || BoardManager.instance.IsShifting) {
 			return;
 		}
-
-        isPressed = true;
+        previouslyMovedTilePosition = transform.position;
         Select();
     }
 
     void OnMouseUp()
     {
-        isPressed = false;
         Deselect();
     }
 
     public void OnBeginDrag(PointerEventData pointerEventData)
     {
-        currentlySelectedTile = gameObject.GetComponent<Tile>();
-        previouslyMovedTilePosition = currentlySelectedTile.transform.position;
-        render.color = new Color(1f, 1f, 1f, .7f);
-        render.sortingOrder = 1000;
+        Debug.Log(transform.position);
+        currentlyDraggingTile = this;
+        previouslyMovedTilePosition = transform.position;
         SFXManager.instance.PlaySFX(Clip.Select);
     }
 
     public void OnDrag(PointerEventData pointerEventData)
     {
-        Vector2 MousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        Vector2 objPosition = Camera.main.ScreenToWorldPoint(MousePosition);
-        transform.position = objPosition;
+        Debug.Log(transform.position);
+        Debug.Log("to");
+        Vector3 objPosition = Camera.main.ScreenToWorldPoint(pointerEventData.position);
+        transform.position = new Vector3(objPosition.x, objPosition.y, transform.position.z);
+        Debug.Log(transform.position);
     }
 
     public void OnEndDrag(PointerEventData pointerEventData)
     {
-        currentlySelectedTile = null;
+        currentlyDraggingTile = null;
         render.color = new Color(1f, 1f, 1f, 1f);
         render.sortingOrder = 1;
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
-        Debug.Log(transform.position);
-        if(!(currentlySelectedTile is null))
+        if (!(currentlyDraggingTile is null))
         {
-            Debug.Log(currentlySelectedTile);
-            var currentPosition = gameObject.GetComponent<Tile>().transform.position;
+            Debug.Log(transform.position);
+            Debug.Log("Cursor Entering " + render.sprite.name + " GameObject");
+            var currentPosition = transform.position;
             transform.position = previouslyMovedTilePosition;
             previouslyMovedTilePosition = currentPosition;
+            Debug.Log(transform.position);
         }
     }
-
-    public void SwapSprite(SpriteRenderer render2) {
-		if (render.sprite == render2.sprite) {
-			return;
-		}
-
-		Sprite tempSprite = render2.sprite;
-		render2.sprite = render.sprite;
-		render.sprite = tempSprite;
-		SFXManager.instance.PlaySFX(Clip.Swap);
-		GUIManager.instance.MoveCounter--; // Add this line here
-	}
-
-	private GameObject GetAdjacent(Vector2 castDir) {
-		RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir);
-		if (hit.collider != null) {
-			return hit.collider.gameObject;
-		}
-		return null;
-	}
-
-	private List<GameObject> GetAllAdjacentTiles() {
-		List<GameObject> adjacentTiles = new List<GameObject>();
-		for (int i = 0; i < adjacentDirections.Length; i++) {
-			adjacentTiles.Add(GetAdjacent(adjacentDirections[i]));
-		}
-		return adjacentTiles;
-	}
-
+    
 	private List<GameObject> FindMatch(Vector2 castDir) {
 		List<GameObject> tilesInDirection = new List<GameObject>();
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir);
