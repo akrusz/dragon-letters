@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour {
 	public static BoardManager instance;
@@ -17,17 +18,20 @@ public class BoardManager : MonoBehaviour {
 		instance = GetComponent<BoardManager>();
 
         tile.SetActive(true);
-		Vector2 offset = tile.GetComponent<SpriteRenderer>().bounds.size;
-        CreateBoard(offset.x, offset.y);
+        CreateBoard(tile.GetComponent<Image>().sprite.rect.width, tile.GetComponent<Image>().sprite.rect.height);
     }
 
 	private void CreateBoard (float xOffset, float yOffset)
     {
 		tiles = new GameObject[tileCountX, tileCountY];
-
+        GameObject t = Instantiate(tile,
+                    new Vector3(0,0, 0),
+                               tile.transform.rotation);
         float startX = transform.position.x;
 		float startY = transform.position.y;
-        
+        Debug.Log(transform.position);
+        Debug.Log(xOffset);
+        Debug.Log(yOffset);
 		for (int x = 0; x < tileCountX; x++)
         {
 			for (int y = 0; y < tileCountY; y++)
@@ -37,22 +41,22 @@ public class BoardManager : MonoBehaviour {
                                 startY + (yOffset * y), 0),
                                 tile.transform.rotation);
 				tiles[x, y] = newTile;
-                tiles[x, y].GetComponent<SpriteRenderer>().sortingOrder = 1;
-                newTile.transform.parent = transform;
+                newTile.transform.SetParent(transform);
 
                 var possibleLetters = new List<LetterTile>();
                 possibleLetters = letters.ToList();
 
                 LetterTile newLetterTile = possibleLetters[Random.Range(0, possibleLetters.Count)];
-                newTile.GetComponent<SpriteRenderer>().sprite = newLetterTile.Sprite;
-			}
+                newTile.GetComponent<Image>().sprite = newLetterTile.Sprite;
+                Debug.Log(newTile.GetComponent<Image>().transform.position);
+            }
         }
     }
 
 	public IEnumerator FindNullTiles() {
 		for (int x = 0; x < tileCountX; x++) {
 			for (int y = 0; y < tileCountY; y++) {
-				if (tiles[x, y].GetComponent<SpriteRenderer>().sprite == null) {
+				if (tiles[x, y].GetComponent<Image>().sprite == null) {
 					yield return StartCoroutine(ShiftTilesDown(x, y));
 					break;
 				}
@@ -68,11 +72,11 @@ public class BoardManager : MonoBehaviour {
 
 	private IEnumerator ShiftTilesDown(int x, int yStart, float shiftDelay = .03f) {
 		IsShifting = true;
-		List<SpriteRenderer> renders = new List<SpriteRenderer>();
+		List<Image> renders = new List<Image>();
 		int nullCount = 0;
 
 		for (int y = yStart; y < tileCountY; y++) {
-			SpriteRenderer render = tiles[x, y].GetComponent<SpriteRenderer>();
+			Image render = tiles[x, y].GetComponent<Image>();
 			if (render.sprite == null) {
 				nullCount++;
 			}

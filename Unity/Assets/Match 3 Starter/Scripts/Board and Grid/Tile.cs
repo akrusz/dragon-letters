@@ -7,14 +7,16 @@ using UnityEngine.UI;
 
 public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
 {
-	private static Color selectedColor = new Color(.8f, .8f, .3f, 1.0f);
 	private static Tile currentlyDraggingTile = null;
-	private static Vector3 previouslyMovedTilePosition;
+    private static Vector3 emptyTilePosition;
     
-	private SpriteRenderer render;
+	public Image tileImage;
 
-    void Awake() {
-		render = GetComponent<SpriteRenderer>();
+    void Awake()
+    {
+        tileImage = GetComponent<Image>();
+        transform.position = new Vector3(1,1,1);
+        Debug.Log(tileImage.sprite.name);
     }
 
 	private void Select() {
@@ -25,14 +27,15 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void Update()
     {
+        transform.position = Input.mousePosition;
     }
 
     void OnMouseDown() {
 		// Not Selectable conditions
-		if (render.sprite == null || BoardManager.instance.IsShifting) {
+		if (tileImage.sprite == null || BoardManager.instance.IsShifting) {
 			return;
 		}
-        previouslyMovedTilePosition = transform.position;
+        emptyTilePosition = transform.position;
         Select();
     }
 
@@ -43,26 +46,23 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     public void OnBeginDrag(PointerEventData pointerEventData)
     {
-        Debug.Log(transform.position);
         currentlyDraggingTile = this;
-        previouslyMovedTilePosition = transform.position;
+        emptyTilePosition = transform.position;
         SFXManager.instance.PlaySFX(Clip.Select);
+        tileImage.enabled = false;
     }
 
     public void OnDrag(PointerEventData pointerEventData)
     {
-        Debug.Log(transform.position);
-        Debug.Log("to");
         Vector3 objPosition = Camera.main.ScreenToWorldPoint(pointerEventData.position);
         transform.position = new Vector3(objPosition.x, objPosition.y, transform.position.z);
-        Debug.Log(transform.position);
     }
 
     public void OnEndDrag(PointerEventData pointerEventData)
     {
         currentlyDraggingTile = null;
-        render.color = new Color(1f, 1f, 1f, 1f);
-        render.sortingOrder = 1;
+        tileImage.color = new Color(1f, 1f, 1f, 1f);
+        tileImage.enabled = true;
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
@@ -70,10 +70,10 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         if (!(currentlyDraggingTile is null))
         {
             Debug.Log(transform.position);
-            Debug.Log("Cursor Entering " + render.sprite.name + " GameObject");
+            Debug.Log("Cursor Entering " + tileImage.sprite.name + " GameObject");
             var currentPosition = transform.position;
-            transform.position = previouslyMovedTilePosition;
-            previouslyMovedTilePosition = currentPosition;
+            transform.position = emptyTilePosition;
+            emptyTilePosition = currentPosition;
             Debug.Log(transform.position);
         }
     }
@@ -81,7 +81,7 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	private List<GameObject> FindMatch(Vector2 castDir) {
 		List<GameObject> tilesInDirection = new List<GameObject>();
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir);
-        string tileLetter = render.sprite?.name.Split('_')[1].ToLower();
+        string tileLetter = tileImage.sprite?.name.Split('_')[1].ToLower();
 		while (hit.collider != null) {
 			tilesInDirection.Add(hit.collider.gameObject);
 			hit = Physics2D.Raycast(hit.collider.transform.position, castDir);
@@ -89,7 +89,7 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
         var lettersInDirection = new List<string> { tileLetter };
         lettersInDirection.AddRange(tilesInDirection.Select(
-            mt => mt.GetComponent<SpriteRenderer>()?.sprite?.name.Split('_')[1].ToLower()));
+            mt => mt.GetComponent<Image>()?.sprite?.name.Split('_')[1].ToLower()));
         for(var wordLen = tilesInDirection.Count + 1; wordLen > 3; wordLen--)
         {
             string potentialWord = String.Join("", lettersInDirection.Take(wordLen).ToList());
@@ -108,7 +108,7 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		for (int i = 0; i < paths.Length; i++) { matchingTiles.AddRange(FindMatch(paths[i])); }
 		if (matchingTiles.Count >= 2) {
 			for (int i = 0; i < matchingTiles.Count; i++) {
-				matchingTiles[i].GetComponent<SpriteRenderer>().sprite = null;
+				matchingTiles[i].GetComponent<Image>().sprite = null;
 			}
 			matchFound = true;
 		}
@@ -116,11 +116,11 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	private bool matchFound = false;
 	public void ClearAllMatches() {
-		if (render.sprite == null)
+		if (tileImage.sprite == null)
 			return;
 		ClearMatch(new Vector2[2] { Vector2.right, Vector2.down });
 		if (matchFound) {
-			render.sprite = null;
+			tileImage.sprite = null;
 			matchFound = false;
 			StopCoroutine(BoardManager.instance.FindNullTiles()); //Add this line
 			StartCoroutine(BoardManager.instance.FindNullTiles()); //Add this line
