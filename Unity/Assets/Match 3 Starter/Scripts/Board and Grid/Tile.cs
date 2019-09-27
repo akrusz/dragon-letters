@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
 {
@@ -17,8 +16,9 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		render = GetComponent<SpriteRenderer>();
     }
 
-	private void Select() {
-	}
+	private void Select()
+    {
+    }
 
 	private void Deselect() {
 	}
@@ -27,7 +27,8 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
     }
 
-    void OnMouseDown() {
+    void OnMouseDown()
+    {
 		// Not Selectable conditions
 		if (render.sprite == null || BoardManager.instance.IsShifting) {
 			return;
@@ -44,6 +45,8 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public void OnBeginDrag(PointerEventData pointerEventData)
     {
         Debug.Log(transform.position);
+        render.sortingOrder = 1000;
+        render.color = new Color(1f, 1f, 1f, 0.7f);
         currentlyDraggingTile = this;
         previouslyMovedTilePosition = transform.position;
         SFXManager.instance.PlaySFX(Clip.Select);
@@ -51,15 +54,13 @@ public class Tile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     public void OnDrag(PointerEventData pointerEventData)
     {
-        Debug.Log(transform.position);
-        Debug.Log("to");
         Vector3 objPosition = Camera.main.ScreenToWorldPoint(pointerEventData.position);
-        transform.position = new Vector3(objPosition.x, objPosition.y, transform.position.z);
-        Debug.Log(transform.position);
+        transform.position = new Vector3(objPosition.x - 0.5f, objPosition.y + 0.5f, transform.position.z);
     }
 
     public void OnEndDrag(PointerEventData pointerEventData)
     {
+        transform.position = previouslyMovedTilePosition;
         currentlyDraggingTile = null;
         render.color = new Color(1f, 1f, 1f, 1f);
         render.sortingOrder = 1;
