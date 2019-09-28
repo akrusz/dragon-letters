@@ -6,7 +6,7 @@ using System.Linq;
 public class BoardManager : MonoBehaviour {
 	public static BoardManager instance;
     public List<LetterTile> letters = new List<LetterTile>();
-	public GameObject tile;
+	public GameObject tileObject;
 	public int tileCountX, tileCountY;
 
 	private GameObject[,] tiles;
@@ -15,9 +15,8 @@ public class BoardManager : MonoBehaviour {
 
 	void Start () {
 		instance = GetComponent<BoardManager>();
-
-        tile.SetActive(true);
-		Vector2 offset = tile.GetComponent<SpriteRenderer>().bounds.size;
+        tileObject.SetActive(true);
+		Vector2 offset = tileObject.GetComponent<SpriteRenderer>().bounds.size;
         CreateBoard(offset.x, offset.y);
     }
 
@@ -32,13 +31,14 @@ public class BoardManager : MonoBehaviour {
         {
 			for (int y = 0; y < tileCountY; y++)
             {
-                GameObject newTile = Instantiate(tile,
+                GameObject newTile = Instantiate(tileObject,
                     new Vector3(startX + (xOffset * x),
                                 startY + (yOffset * y), 0),
-                                tile.transform.rotation);
+                                tileObject.transform.rotation);
 				tiles[x, y] = newTile;
                 tiles[x, y].GetComponent<SpriteRenderer>().sortingOrder = 1;
                 newTile.transform.parent = transform;
+                newTile.GetComponent<Tile>().parentBoard = this;
 
                 var possibleLetters = new List<LetterTile>();
                 possibleLetters = letters.ToList();
@@ -56,12 +56,6 @@ public class BoardManager : MonoBehaviour {
 					yield return StartCoroutine(ShiftTilesDown(x, y));
 					break;
 				}
-			}
-		}
-
-		for (int x = 0; x < tileCountX; x++) {
-			for (int y = 0; y < tileCountY; y++) {
-				tiles[x, y].GetComponent<Tile>().ClearAllMatches();
 			}
 		}
 	}
@@ -97,4 +91,26 @@ public class BoardManager : MonoBehaviour {
         return possibleLetters[Random.Range(0, possibleLetters.Count)];
 	}
 
+    public void ClearAllMatches()
+    {
+        for (int x = 0; x < tileCountX; x++)
+        {
+            for (int y = tileCountY -  1; y < 0; y--)
+            {
+                var tile = tiles[x, y].GetComponent<Tile>();
+
+                if (tile.render.sprite == null)
+                    return;
+                var matchFound = tile.ClearMatch(new Vector2[2] { Vector2.right, Vector2.down });
+                if (matchFound)
+                {
+                    tile.render.sprite = null;
+                    matchFound = false;
+                    StopCoroutine(FindNullTiles()); //Add this line
+                    StartCoroutine(FindNullTiles()); //Add this line
+                    SFXManager.instance.PlaySFX(Clip.Clear);
+                }
+            }
+        }
+    }
 }
