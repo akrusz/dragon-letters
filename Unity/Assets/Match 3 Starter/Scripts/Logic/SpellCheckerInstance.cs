@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -14,10 +15,33 @@ public static class SpellCheckerInstance
         Hydrate(wordAsset);
     }
 
-    public static string GetRandom(int? length)
+    public static string GetRandom(int? length, IList<Tuple<int, char>> filters)
     {
+        if (length is null && !(filters is null))
+            throw new NotImplementedException("Can only filter words of a given length");
+
         var filteredWordList = (length is null) ? wordList : wordsByLength[length.Value];
-        return filteredWordList[(int) Mathf.Floor(Random.Range(0, filteredWordList.Count))];
+        if(filters != null)
+        {
+            var randomWordOrder = Enumerable.Range(1, filteredWordList.Count).OrderBy(_ => UnityEngine.Random.Range(0,1));
+            foreach (var index in randomWordOrder) {
+                var word = filteredWordList[index];
+                var match = true;
+                foreach (var filter in filters)
+                {
+                    // for each (int, char) pair, check if the int-th letter of the word is char
+                    if(word[filter.Item1] != filter.Item2)
+                    {
+                        match = false;
+                    }
+                }
+                if (match)
+                    return word;
+            }
+            return null;
+        }
+
+        return filteredWordList[(int) Mathf.Floor(UnityEngine.Random.Range(0, filteredWordList.Count))];
     }
 
     public static bool Check(string word)
