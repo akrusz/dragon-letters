@@ -15,7 +15,7 @@ public static class SpellCheckerInstance
         Hydrate(wordAsset);
     }
 
-    public static string GetRandom(int? length, IList<Tuple<int, char>> filters)
+    public static string GetRandom(int? length, IList<Tuple<int, string>> filters)
     {
         if (length is null && !(filters is null))
             throw new NotImplementedException("Can only filter words of a given length");
@@ -29,8 +29,8 @@ public static class SpellCheckerInstance
                 var match = true;
                 foreach (var filter in filters)
                 {
-                    // for each (int, char) pair, check if the int-th letter of the word is char
-                    if(word[filter.Item1] != filter.Item2)
+                    // for each (int, string) pair, check if the int-th letter of the word is string
+                    if(word[filter.Item1].ToString() != filter.Item2)
                     {
                         match = false;
                     }
